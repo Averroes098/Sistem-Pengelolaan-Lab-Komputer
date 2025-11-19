@@ -7,13 +7,26 @@ use Illuminate\Support\Facades\Auth;
 
 class User
 {
+    /**
+     * Handle an incoming request.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \Closure  $next
+     * @return mixed
+     */
     public function handle($request, Closure $next)
     {
-        // Accept both legacy 'mahasiswa' and modern 'user' roles for compatibility
-        if (Auth::check() && in_array(Auth::user()->level, ['user', 'mahasiswa'])) {
+        // REKOMENDASI:
+        // Kita hanya mengecek 'user' karena di database migration Anda 
+        // (2025_11_20_000000_update_user_level_enum.php)
+        // kolom level didefinisikan sebagai ENUM('admin', 'staf', 'user').
+        // Menggunakan 'mahasiswa' di sini akan membuat kode tidak konsisten dengan database.
+        
+        if (Auth::check() && Auth::user()->level === 'user') {
             return $next($request);
         }
 
-        abort(403, 'Akses ditolak.');
+        // Jika user mencoba masuk tapi bukan role 'user' (misal admin iseng akses link user)
+        abort(403, 'Akses ditolak. Halaman ini khusus untuk User (Mahasiswa/Dosen).');
     }
 }

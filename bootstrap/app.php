@@ -25,6 +25,7 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->alias([
             'auth' => \App\Http\Middleware\Authenticate::class,   // penting! middleware login
             'admin' => \App\Http\Middleware\Admin::class,
+            'staf' => \App\Http\Middleware\Staf::class,
             'user' => \App\Http\Middleware\User::class,
         ]);
     })
