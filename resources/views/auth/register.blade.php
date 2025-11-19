@@ -59,18 +59,6 @@
                     <input type="text" class="form-control" id="nama" name="nama" placeholder="Masukkan Nama">
                   </div>
                   <div class="form-group row">
-                    <label for="jenis_kelamin">Jenis Kelamin</label>
-                    <select class="form-control" id="jenis_kelamin" name="jenis_kelamin">
-                      <option selected disabled>Pilih jenis kelamin</option>
-                      <option value="L">Laki-laki</option>
-                      <option value="P">Perempuan</option>
-                    </select>
-                  </div>
-                  <div class="form-group row">
-                    <label for="no_telp">Nomor Telepon / No Whatsapp</label>
-                    <input type="text" class="form-control" id="no_telp" name="no_telp" placeholder="Masukkan nomor telepon atau no whatsapp(contoh: +6281268335349)">
-                  </div>
-                  <div class="form-group row">
                     <label for="email" class="col-sm-3 col-form-label">Email</label>
                     <input type="email" class="form-control" id="email" name="email" placeholder="Masukkan email">
                   </div>
@@ -83,7 +71,7 @@
                   <button class="btn btn-light">Cancel</button>
                 </form>
                 <div class="form-group">
-                  <p>Sudah punya akun? Segera masuk pada <a href="{{ route('login.index') }}">halaman login</a></p>
+                  <p>Sudah punya akun? Segera masuk pada <a href="{{ route('login') }}">halaman login</a></p>
                 </div>
               </div>
             </div>

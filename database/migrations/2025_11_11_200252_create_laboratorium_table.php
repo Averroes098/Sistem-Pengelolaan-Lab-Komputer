@@ -11,11 +11,13 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('laboratorium', function (Blueprint $table) {
-            $table->id();
-            $table->string('nama');
-            $table->boolean('status');
-            $table->timestamps();
+Schema::create('laboratorium', function (Blueprint $table) {
+    $table->id();
+    $table->string('nama_lab');
+    $table->string('lokasi')->nullable();
+    $table->integer('kapasitas')->nullable();
+    $table->text('keterangan')->nullable();
+    $table->timestamps();
         });
     }
 

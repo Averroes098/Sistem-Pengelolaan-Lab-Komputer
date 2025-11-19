@@ -9,61 +9,100 @@ use Illuminate\Support\Facades\Hash;
 
 class AuthController extends Controller
 {
+    /**
+     * Tampilkan halaman login.
+     */
+    public function login()
+    {
+        return view('auth.login');
+    }
+
+    /**
+     * Proses autentikasi pengguna.
+     */
+    public function authenticate(Request $request)
+    {
+        // Validasi form login
+        $request->validate([
+            'email' => 'required|email',
+            'password' => 'required|min:1',
+        ]);
+
+        $credentials = $request->only('email', 'password');
+
+        if (Auth::attempt($credentials)) {
+            // Regenerasi session ID untuk keamanan
+            $request->session()->regenerate();
+
+            $user = Auth::user();
+
+            // Arahkan sesuai level user
+            if ($user->level === 'admin') {
+                return redirect()->route('admin.dashboard')
+                    ->with('success', 'Login berhasil sebagai Admin.');
+            } elseif ($user->level === 'staf') {
+                return redirect()->route('staf.dashboard')
+                    ->with('success', 'Login berhasil sebagai Staf.');
+            } else {
+                return redirect()->route('user.index')
+                    ->with('success', 'Login berhasil sebagai Mahasiswa.');
+            }
+        }
+
+        // Jika login gagal
+        return back()->with('error', 'Email atau password salah.');
+    }
+
+    /**
+     * Tampilkan form registrasi.
+     */
     public function register()
     {
         return view('auth.register');
     }
+
+    /**
+     * Proses registrasi user baru.
+     */
     public function create(Request $request)
     {
+        // Validasi data
         $request->validate([
             'nim' => 'required|string|max:20',
             'nama' => 'required|string|max:255',
             'jenis_kelamin' => 'required|in:L,P',
             'no_telp' => 'required|string|min:10|max:21',
             'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:8',
+            'password' => 'required|string|min:1|confirmed',
         ]);
 
+        // Simpan user baru
         User::create([
             'nim' => $request->nim,
             'nama' => $request->nama,
             'jenis_kelamin' => $request->jenis_kelamin,
             'no_telp' => $request->no_telp,
             'email' => $request->email,
-            'password' => Hash::make($request->password)
+            'password' => Hash::make($request->password),
+            'level' => 'user', // default user baru
         ]);
 
-        return redirect()->route('login.index')->with(['success' => 'Registrasi berhasil! Anda dapat melakukan login.']);
+        return redirect()
+            ->route('login')
+            ->with('success', 'Registrasi berhasil! Silakan login.');
     }
-    public function login()
-    {
-        return view('auth.login');
-    }
-    public function authenticate(Request $request)
-    {
-        $request->validate([
-            'email' => 'required|email',
-            'password' => 'required|min:8'
-        ]);
 
-        $user = User::where('email', $request->email)->first();
-        if($user && Hash::check($request->password, $user->password)) {
-            Auth::login($user);
-
-            if($user->level === 'admin') {
-                return redirect()->route('admin.dashboard')->with(['success'=>'Anda berhasil login']);
-            }
-            return redirect()->route('user.index')->with(['success'=>'Anda berhasil login']);
-        }
-        return redirect()->route('login.index')->with(['error'=>'Kesalahan login! Harap periksa email dan password anda kembali.']);
-    }
-    public function logout(Request $request) 
+    /**
+     * Logout dari sistem.
+     */
+    public function logout(Request $request)
     {
         Auth::logout();
-
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 
-        return redirect()->route('login.index')->with(['success'=>'Anda berhasil logout!']);
+        return redirect()
+            ->route('login')
+            ->with('success', 'Anda telah logout dengan aman.');
     }
 }

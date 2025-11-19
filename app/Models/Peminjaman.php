@@ -10,14 +10,19 @@ class Peminjaman extends Model
     protected $table = 'peminjaman';
     protected $guarded = ['id'];
 
-    public function laboratorium(): BelongsTo {
-        return $this->belongsTo(Laboratorium::class);
+    public function alat(): BelongsTo
+    {
+        return $this->belongsTo(Alat::class, 'alat_id');
     }
 
-    public function user(): BelongsTo {
+    public function user(): BelongsTo
+    {
         return $this->belongsTo(User::class, 'user_id');
     }
-    public function lab(): BelongsTo {
+
+    // Tambahkan relasi ke Laboratorium
+    public function laboratorium(): BelongsTo
+    {
         return $this->belongsTo(Laboratorium::class, 'lab_id');
     }
 }

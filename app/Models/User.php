@@ -2,14 +2,12 @@
 
 namespace App\Models;
 
-// use Illuminate\Contracts\Auth\MustVerifyEmail;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
 class User extends Authenticatable
 {
-    /** @use HasFactory<\Database\Factories\UserFactory> */
     use HasFactory, Notifiable;
 
     /**
@@ -20,11 +18,12 @@ class User extends Authenticatable
     protected $fillable = [
         'nim',
         'nama',
-        'no_telp',
-        'jenis_kelamin',
         'email',
         'password',
-        'level'
+        'level',
+        'program_studi',
+        'angkatan',
+        'alamat',
     ];
 
     /**
@@ -38,7 +37,7 @@ class User extends Authenticatable
     ];
 
     /**
-     * Get the attributes that should be cast.
+     * The attributes that should be cast.
      *
      * @return array<string, string>
      */
@@ -50,8 +49,21 @@ class User extends Authenticatable
         ];
     }
 
+    /**
+     * Relasi ke tabel peminjaman
+     */
     public function peminjamans()
     {
         return $this->hasMany(Peminjaman::class, 'user_id', 'id');
+    }
+
+    /**
+     * Accessor: Mengecek apakah profil user sudah lengkap
+     */
+    public function getIsProfileCompleteAttribute(): bool
+    {
+        return !empty($this->program_studi)
+            && !empty($this->angkatan)
+            && !empty($this->alamat);
     }
 }
