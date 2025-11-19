@@ -3,20 +3,19 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-class Alat extends Model
+class Jadwal extends Model
 {
-    protected $table = 'alat';
+    protected $table = 'jadwal';
     protected $guarded = ['id'];
 
     /**
-     * Relasi ke tabel peminjaman
+     * Relasi ke tabel users
      */
-    public function peminjamans(): HasMany
+    public function user(): BelongsTo
     {
-        return $this->hasMany(Peminjaman::class, 'alat_id', 'id');
+        return $this->belongsTo(User::class, 'user_id');
     }
 
     /**

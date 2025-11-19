@@ -18,12 +18,15 @@ class User extends Authenticatable
     protected $fillable = [
         'nim',
         'nama',
+        'no_telp',
+        'jenis_kelamin',
         'email',
         'password',
         'level',
         'program_studi',
         'angkatan',
         'alamat',
+        'is_profile_complete',
     ];
 
     /**
@@ -55,6 +58,22 @@ class User extends Authenticatable
     public function peminjamans()
     {
         return $this->hasMany(Peminjaman::class, 'user_id', 'id');
+    }
+
+    /**
+     * Relasi ke tabel jadwal
+     */
+    public function jadwals()
+    {
+        return $this->hasMany(Jadwal::class, 'user_id', 'id');
+    }
+
+    /**
+     * Relasi ke tabel documents (user sebagai uploader)
+     */
+    public function documents()
+    {
+        return $this->hasMany(Document::class, 'uploaded_by', 'id');
     }
 
     /**

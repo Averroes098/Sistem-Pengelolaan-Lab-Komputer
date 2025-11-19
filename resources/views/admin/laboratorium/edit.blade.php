@@ -30,7 +30,7 @@
       <p class="card-description">Pastikan semua input diisi dengan benar</p>
 
       <!-- FORM -->
-      <form method="POST" action="{{ route('admin.laboratorium.update', $laboratorium->id) }}" class="forms-sample">
+      <form method="POST" action="{{ route('laboratorium.update', $laboratorium->id) }}" class="forms-sample">
         @csrf
         @method('PUT')  {{-- Penting untuk mengubah POST menjadi PUT --}}
 
@@ -43,7 +43,7 @@
             name="nama" 
             class="form-control"
             placeholder="Nama Laboratorium"
-            value="{{ old('nama', $laboratorium->nama) }}"
+            value="{{ old('nama', $laboratorium->nama_lab) }}"
             required>
         </div>
 
