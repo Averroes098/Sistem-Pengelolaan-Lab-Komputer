@@ -12,73 +12,49 @@ use Illuminate\Support\Facades\Auth;
 
 class StafController extends Controller
 {
-    public function index() {
-        return view('staf.dashboard');
-    }
-
-    public function peminjaman() {
-        $menunggu = Peminjaman::where('status_peminjaman', 'pending')->get();
-        return view('staf.peminjaman', compact('menunggu'));
-    }
-
-    public function approve($id) {
-        //
-    }
-
-    public function reject($id) {
-        //
-    }
-
-    public function pengembalian() {
-        $data = Peminjaman::where('status_peminjaman', 'disetujui')->get();
-        return view('staf.pengembalian', compact('data'));
-    }
-
-    public function konfirmasiPengembalian($id) {
-        //
-    }
-
     // ==================== KERUSAKAN ====================
-public function kerusakan() 
-{
-    $alat = Alat::all();
-    return view('staf.kerusakan', compact('alat'));
-}
-
-public function inputKerusakan(Request $request)
-{
-    $request->validate([
-        'alat_id' => 'required|exists:alat,id',
-        'keterangan' => 'required|string|max:500',
-    ]);
-
-    try {
-        // Ambil alat
-        $alat = Alat::findOrFail($request->alat_id);
-        
-        // Update kondisi alat menjadi "Rusak"
-        $alat->update([
-            'kondisi' => 'Rusak',
-        ]);
-
-        // Buat laporan kerusakan di documents table
-        Document::create([
-            'lab_id' => $alat->lab_id,
-            'tipe_dokumen' => 'Laporan Kerusakan',
-            'judul' => "Laporan Kerusakan - {$alat->nama_alat}",
-            'deskripsi' => $request->keterangan,
-            'file_path' => null,
-            'uploaded_by' => Auth::id(),
-        ]);
-
-        return redirect()->back()->with('success', 'Kerusakan berhasil dicatat dan alat diupdate menjadi Rusak');
-    } catch (\Exception $e) {
-        return redirect()->back()->with('error', 'Error: ' . $e->getMessage());
+    public function kerusakan() 
+    {
+        $alat = Alat::all();
+        return view('staf.kerusakan', compact('alat'));
     }
-}
 
+    public function inputKerusakan(Request $request)
+    {
+        $request->validate([
+            'alat_id' => 'required|exists:alat,id',
+            'keterangan' => 'required|string|max:500',
+        ]);
+
+        try {
+            // Ambil alat
+            $alat = Alat::findOrFail($request->alat_id);
+            
+            // Update kondisi alat menjadi "Rusak"
+            $alat->update([
+                'kondisi' => 'Rusak',
+            ]);
+
+            // Buat laporan kerusakan di documents table
+            Document::create([
+                'lab_id' => $alat->lab_id,
+                'tipe_dokumen' => 'Laporan Kerusakan',
+                'judul' => "Laporan Kerusakan - {$alat->nama_alat}",
+                'deskripsi' => $request->keterangan,
+                'file_path' => null,
+                'uploaded_by' => Auth::id(),
+            ]);
+
+            return redirect()->back()->with('success', 'Kerusakan berhasil dicatat dan alat diupdate menjadi Rusak');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Error: ' . $e->getMessage());
+        }
+    }
+
+    // ==================== SOP ====================
     public function sop() {
-        return view('staf.sop');
+        $laboratorium = Laboratorium::all();
+        return view('staf.sop', compact('laboratorium'));
     }
 
     public function uploadSOP(Request $request) {

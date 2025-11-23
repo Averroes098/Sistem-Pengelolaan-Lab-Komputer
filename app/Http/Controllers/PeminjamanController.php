@@ -65,7 +65,7 @@ class PeminjamanController extends Controller
         $peminjaman->status_pengembalian = "belum dikembalikan";
         $peminjaman->save();
 
-        return redirect()->route('peminjaman.index')
+        return redirect()->route('admin.peminjaman.index')
             ->with('success', 'Peminjaman Berhasil Ditambahkan');
     }
 
@@ -126,7 +126,7 @@ class PeminjamanController extends Controller
         $peminjaman->status_pengembalian = $request->status_pengembalian;
         $peminjaman->save();
 
-        return redirect()->route('peminjaman.index')
+        return redirect()->route('admin.peminjaman.index')
             ->with('success', 'Data berhasil diubah!');
     }
 
@@ -138,7 +138,7 @@ class PeminjamanController extends Controller
         $peminjaman = Peminjaman::findOrFail($id);
         $peminjaman->delete();
 
-        return redirect()->route('peminjaman.index')
+        return redirect()->route('admin.peminjaman.index')
             ->with('success', 'Data berhasil dihapus!');
     }
 

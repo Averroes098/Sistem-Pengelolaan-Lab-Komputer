@@ -9,10 +9,19 @@ class Staf
 {
     public function handle($request, Closure $next)
     {
-        if (Auth::check() && Auth::user()->level === 'staf') {
+        // Cek apakah user sudah login
+        if (!Auth::check()) {
+            return redirect()->route('login')->with('error', 'Silahkan login terlebih dahulu');
+        }
+
+        // Cek apakah level adalah staf
+        $user = Auth::user();
+        if ($user && $user->level === 'staf') {
             return $next($request);
         }
 
-        abort(403, 'Akses ditolak.');
+        // Jika bukan staf, arahkan ke dashboard
+        return redirect()->route('dashboard')
+            ->with('error', 'Anda tidak memiliki akses ke halaman staf.');
     }
 }

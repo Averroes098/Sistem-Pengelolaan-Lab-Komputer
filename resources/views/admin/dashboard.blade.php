@@ -69,7 +69,7 @@
         <div class="card-body">
           <h4 class="card-title mb-0">Peminjaman Terbaru</h4>
 
-          @foreach ($data_peminjaman as $dp)
+          @forelse ($data_peminjaman as $dp)
           <div class="d-flex py-2 border-bottom">
             <div class="wrapper">
               <small class="text-muted">
@@ -79,17 +79,19 @@
               </small>
 
               <h6 class="font-weight-semibold text-gray mb-1">
-                {{ $dp->user->nama }}
+                {{ $dp->user?->nama ?? 'User Tidak Dikenal' }}
               </h6>
 
-              <p class="font-sm text-gray">Lab: {{ $dp->laboratorium->nama_lab ?? 'Tidak ditemukan' }}</p>
+              <p class="font-sm text-gray">Lab: {{ $dp->laboratorium?->nama_lab ?? 'Tidak ditemukan' }}</p>
 
               <p class="font-sm text-gray">
-                {{ $dp->alat->nama_alat ?? 'Alat tidak ditemukan' }}
+                {{ $dp->alat?->nama_alat ?? 'Alat tidak ditemukan' }}
               </p>
             </div>
           </div>
-          @endforeach
+          @empty
+          <p class="text-muted text-center py-3">Belum ada data peminjaman</p>
+          @endforelse
 
           <a class="d-block mt-3" href="{{ route('admin.peminjaman.index') }}">Show all</a>
         </div>

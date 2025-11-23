@@ -23,9 +23,9 @@
                 <tbody>
                     @forelse($menunggu as $p)
                     <tr>
-                        <td>{{ $p->user->name }}</td>
-                        <td>{{ $p->alat->nama_alat }}</td>
-                        <td>{{ $p->tanggal_pinjam }}</td>
+                        <td>{{ $p->user?->nama ?? $p->user?->name ?? 'User Tidak Dikenal' }}</td>
+                        <td>{{ $p->alat?->nama_alat ?? ($p->laboratorium?->nama_lab ?? 'Lab Tidak Dikenal') }}</td>
+                        <td>{{ $p->tgl_pinjam ?? $p->tanggal_pinjam ?? '-' }}</td>
                         <td><span class="badge bg-warning text-dark">Menunggu</span></td>
                         <td>
                             <form method="POST" action="{{ route('staf.peminjaman.approve', $p->id) }}" style="display:inline">

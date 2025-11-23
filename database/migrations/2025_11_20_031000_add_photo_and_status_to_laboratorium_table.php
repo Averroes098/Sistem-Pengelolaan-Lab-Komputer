@@ -12,11 +12,15 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('laboratorium', function (Blueprint $table) {
-            // Tambah kolom status (tersedia/tidak tersedia)
-            $table->enum('status', ['tersedia', 'tidak_tersedia'])->default('tersedia')->after('kapasitas');
+            // Tambah kolom status hanya jika belum ada
+            if (!Schema::hasColumn('laboratorium', 'status')) {
+                $table->enum('status', ['tersedia', 'tidak_tersedia'])->default('tersedia')->after('kapasitas');
+            }
             
             // Tambah kolom untuk foto lab
-            $table->string('photo_lab')->nullable()->after('status');
+            if (!Schema::hasColumn('laboratorium', 'photo_lab')) {
+                $table->string('photo_lab')->nullable()->after('status');
+            }
         });
     }
 

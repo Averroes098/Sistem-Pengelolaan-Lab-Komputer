@@ -23,9 +23,9 @@
                 <tbody>
                     @forelse($peminjaman as $p)
                     <tr>
-                        <td>{{ $p->user->name }}</td>
-                        <td>{{ $p->alat->nama_alat }}</td>
-                        <td>{{ $p->tanggal_pinjam }}</td>
+                        <td>{{ $p->user?->nama ?? $p->user?->name ?? 'User Tidak Dikenal' }}</td>
+                        <td>{{ $p->alat?->nama_alat ?? ($p->laboratorium?->nama_lab ?? 'Lab Tidak Dikenal') }}</td>
+                        <td>{{ $p->tgl_pinjam ?? $p->tanggal_pinjam ?? '-' }}</td>
                         <td>
                             <select class="form-control" name="kondisi">
                                 <option value="baik">Baik</option>
@@ -33,8 +33,10 @@
                             </select>
                         </td>
                         <td>
-                            <a href="{{ route('staf.prosesPengembalian', $p->id) }}" 
-                               class="btn btn-success btn-sm">Selesaikan</a>
+                            <form method="POST" action="{{ route('staf.pengembalian.konfirmasi', $p->id) }}" style="display:inline">
+                                @csrf
+                                <button type="submit" class="btn btn-success btn-sm">Selesaikan</button>
+                            </form>
                         </td>
                     </tr>
                     @empty

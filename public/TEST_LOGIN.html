@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Login Test</title>
+</head>
+
+<body>
+    <h1>Peminjaman Lab - Login Test</h1>
+
+    <h2>Test Akun Tersedia:</h2>
+    <table border="1">
+        <tr>
+            <th>Role</th>
+            <th>Email</th>
+            <th>Password</th>
+        </tr>
+        <tr>
+            <td>Admin</td>
+            <td>admin@lab.com</td>
+            <td>admin123</td>
+        </tr>
+        <tr>
+            <td>Staff</td>
+            <td>staf@lab.com</td>
+            <td>staf123</td>
+        </tr>
+        <tr>
+            <td>User (Mahasiswa)</td>
+            <td>user@lab.com</td>
+            <td>user123</td>
+        </tr>
+    </table>
+
+    <h2>Instruksi Pengujian:</h2>
+    <ol>
+        <li>Buka URL: <strong>http://127.0.0.1:8000</strong></li>
+        <li>Klik tombol <strong>Login</strong></li>
+        <li>Masukkan Email dan Password sesuai role yang ingin ditest</li>
+        <li>Verifikasi setiap role dapat login dan akses dashboard-nya</li>
+    </ol>
+
+    <h2>Hasil yang Diharapkan:</h2>
+    <ul>
+        <li><strong>Admin (admin@lab.com)</strong>
+            <ul>
+                <li>Dapat login</li>
+                <li>Redirect ke /admin/dashboard</li>
+                <li>Dapat melihat statistik lab dan daftar peminjaman</li>
+            </ul>
+        </li>
+        <li><strong>Staff (staf@lab.com)</strong>
+            <ul>
+                <li>Dapat login</li>
+                <li>Redirect ke /staf/dashboard</li>
+                <li>Dapat melihat statistik dan data peminjaman</li>
+            </ul>
+        </li>
+        <li><strong>User/Mahasiswa (user@lab.com)</strong>
+            <ul>
+                <li>Dapat login</li>
+                <li>Redirect ke /user atau dashboard user</li>
+                <li>Dapat melihat daftar lab dan riwayat peminjaman</li>
+            </ul>
+        </li>
+    </ul>
+</body>
+
+</html>

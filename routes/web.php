@@ -12,8 +12,12 @@ use Illuminate\Support\Facades\Route;
 
 // ================== AUTH (LOGIN & REGISTER) ==================
 Route::middleware('guest')->group(function () {
-    Route::get('/', [AuthController::class, 'login'])->name('login');
-    Route::post('/', [AuthController::class, 'authenticate'])->name('login.authenticate');
+    Route::get('/', function () {
+        return view('welcome');
+    })->name('welcome');
+    
+    Route::get('/login', [AuthController::class, 'login'])->name('login');
+    Route::post('/login', [AuthController::class, 'authenticate'])->name('login.authenticate');
 
     Route::get('/register', [AuthController::class, 'register'])->name('register.index');
     Route::post('/register', [AuthController::class, 'create'])->name('register.create');
