@@ -15,7 +15,7 @@
                 <a href="{{ route('admin.dashboard') }}">Dashboard</a>
               </li>
               <li class="breadcrumb-item">
-                <a href="{{ route('laboratorium.index') }}">Data Laboratorium</a>
+                <a href="{{ route('admin.laboratorium.index') }}">Data Laboratorium</a>
               </li>
               <li class="breadcrumb-item active" aria-current="page">Edit Data</li>
           </ol>
@@ -30,7 +30,7 @@
       <p class="card-description">Pastikan semua input diisi dengan benar</p>
 
       <!-- FORM -->
-      <form method="POST" action="{{ route('laboratorium.update', $laboratorium->id) }}" class="forms-sample">
+      <form method="POST" action="{{ route('admin.laboratorium.update', $laboratorium->id) }}" class="forms-sample">
         @csrf
         @method('PUT')  {{-- Penting untuk mengubah POST menjadi PUT --}}
 

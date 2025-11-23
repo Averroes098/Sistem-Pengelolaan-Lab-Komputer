@@ -7,7 +7,7 @@ use App\Http\Controllers\PeminjamanController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\StafController;
-// use App\Http\Controllers\StafController; // Opsional, jika logika sudah pindah ke PeminjamanController
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
 // ================== AUTH (LOGIN & REGISTER) ==================
@@ -18,6 +18,11 @@ Route::middleware('guest')->group(function () {
     Route::get('/register', [AuthController::class, 'register'])->name('register.index');
     Route::post('/register', [AuthController::class, 'create'])->name('register.create');
 });
+
+// ================== REDIRECT AUTHENTICATED USERS TO DASHBOARD ==================
+Route::middleware('auth')->get('/home', function () {
+    return redirect()->route('dashboard');
+})->name('home');
 
 // ================== LOGOUT ==================
 Route::post('/logout', [AuthController::class, 'logout'])
@@ -37,10 +42,10 @@ Route::prefix('admin')->middleware(['auth', 'admin'])->group(function () {
     // Dashboard Admin — tambahkan route khusus sehingga helper `route('admin.dashboard')` valid
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('admin.dashboard');
     
-    Route::resource('laboratorium', LaboratoriumController::class)->except(['show']);
+    Route::resource('laboratorium', LaboratoriumController::class)->except(['show'])->names('admin.laboratorium');
     
     // Resource peminjaman untuk admin (CRUD lengkap)
-    Route::resource('peminjaman', PeminjamanController::class)->except(['show']);
+    Route::resource('peminjaman', PeminjamanController::class)->except(['show'])->names('admin.peminjaman');
 });
 
 
@@ -59,10 +64,18 @@ Route::prefix('user')->middleware(['auth', 'user'])->group(function () {
     Route::post('/peminjaman/store-user', [PeminjamanController::class, 'storeUser'])
         ->name('peminjaman.storeUser');
 
-    // --- Profil User ---
+    // --- Profil User (hanya untuk user dengan profile complete) ---
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+});
+
+// ================== PROFILE COMPLETION (accessible untuk incomplete profiles) ==================
+Route::middleware('auth')->group(function () {
+    // Profile view (bisa diakses user incomplete dan complete)
+    Route::patch('/user/profile', [ProfileController::class, 'update'])->name('profile.update');
+    
+    // Profile completion (khusus incomplete profiles)
+    Route::get('/profile/complete', [ProfileController::class, 'completeProfile'])->name('profile.complete');
 });
 
 

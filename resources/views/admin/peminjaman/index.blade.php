@@ -73,9 +73,9 @@
 
                 <!-- AKSI -->
                 <td>
-                  <a href="{{ route('peminjaman.edit', $d->id) }}" class="btn-sm btn-info btn-rounded">Edit</a>
+                  <a href="{{ route('admin.peminjaman.edit', $d->id) }}" class="btn-sm btn-info btn-rounded">Edit</a>
 
-                  <form action="{{ route('peminjaman.destroy', $d->id) }}" 
+                  <form action="{{ route('admin.peminjaman.destroy', $d->id) }}" 
                         method="POST" 
                         style="display: inline-block;">
                       @csrf

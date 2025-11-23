@@ -11,6 +11,14 @@ class UserController extends Controller
 {
     public function index()
     {
+        $user = Auth::user();
+        
+        // Check if profile is complete, if not redirect to profile completion
+        if (!$user->is_profile_complete) {
+            return redirect()->route('profile.complete')
+                ->with('warning', 'Silakan lengkapi data profil Anda terlebih dahulu.');
+        }
+        
         $data = Peminjaman::where('user_id', Auth::id())->get();
 
         return view('user.index', [

@@ -9,7 +9,7 @@
 
       <h4 class="card-title">Form Tambah Peminjaman</h4>
 
-      <form method="POST" action="{{ route('peminjaman.store') }}">
+      <form method="POST" action="{{ route('admin.peminjaman.store') }}">
         @csrf
 
         {{-- Pilih Laboratorium --}}
@@ -51,7 +51,7 @@
         </div>
 
         <button class="btn btn-success">Simpan</button>
-        <a href="{{ route('peminjaman.index') }}" class="btn btn-light">Cancel</a>
+        <a href="{{ route('admin.peminjaman.index') }}" class="btn btn-light">Cancel</a>
       </form>
 
     </div>

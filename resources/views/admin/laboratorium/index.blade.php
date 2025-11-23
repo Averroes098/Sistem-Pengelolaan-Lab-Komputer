@@ -34,7 +34,7 @@
 
       <div class="d-flex justify-content-between">
         <h4 class="card-title mb-0">Data Laboratorium</h4>
-        <a class="btn-sm btn-primary btn-rounded" href="{{ route('laboratorium.create') }}">
+        <a class="btn-sm btn-primary btn-rounded" href="{{ route('admin.laboratorium.create') }}">
           <small>Tambah Data</small>
         </a>
       </div>
@@ -70,9 +70,9 @@
                 </td>
 
                 <td>
-                  <a href="{{ route('laboratorium.edit', $d->id) }}" class="btn-sm btn-info btn-rounded">Edit</a>
+                  <a href="{{ route('admin.laboratorium.edit', $d->id) }}" class="btn-sm btn-info btn-rounded">Edit</a>
 
-                  <form action="{{ route('laboratorium.destroy', $d->id) }}"
+                  <form action="{{ route('admin.laboratorium.destroy', $d->id) }}"
                         method="POST"
                         style="display: inline-block;">
                       @csrf

@@ -11,7 +11,7 @@
         <nav aria-label="breadcrumb">
           <ol class="breadcrumb">
               <li class="breadcrumb-item"><a href="{{ route('admin.dashboard') }}">Dashboard</a></li>
-              <li class="breadcrumb-item"><a href="{{ route('laboratorium.index') }}">Data Laboratorium</a></li>
+              <li class="breadcrumb-item"><a href="{{ route('admin.laboratorium.index') }}">Data Laboratorium</a></li>
               <li class="breadcrumb-item active" aria-current="page">Tambah Data Laboratorium</li>
           </ol>
         </nav>
@@ -23,7 +23,7 @@
     <div class="card-body">
       <h4 class="card-title">Form Tambah Data</h4>
       <p class="card-description"> Pastikan anda memasuki inputan dengan benar </p>
-      <form class="forms-sample" method="POST" action="{{ route('laboratorium.store') }}">
+      <form class="forms-sample" method="POST" action="{{ route('admin.laboratorium.store') }}">
         @CSRF
         <div class="form-group">
           <label for="nama">Nama Laboratorium</label>

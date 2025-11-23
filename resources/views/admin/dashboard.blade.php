@@ -24,7 +24,7 @@
         <div class="card-body">
           <div class="d-flex justify-content-between">
             <h4 class="card-title mb-0">Data Laboratorium</h4>
-            <a href="{{ route('laboratorium.index') }}"><small>Show All</small></a>
+            <a href="{{ route('admin.laboratorium.index') }}"><small>Show All</small></a>
           </div>
           <p>Berikut adalah beberapa data laboratorim yang tercatat.</p>
 
@@ -91,7 +91,7 @@
           </div>
           @endforeach
 
-          <a class="d-block mt-3" href="{{ route('peminjaman.index') }}">Show all</a>
+          <a class="d-block mt-3" href="{{ route('admin.peminjaman.index') }}">Show all</a>
         </div>
       </div>
     </div>

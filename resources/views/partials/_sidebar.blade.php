@@ -11,13 +11,13 @@
       </a>
     </li>
     <li class="nav-item">
-      <a class="nav-link" href="{{ route('laboratorium.index') }}">
+      <a class="nav-link" href="{{ route('admin.laboratorium.index') }}">
         <i class="menu-icon typcn typcn-document-text"></i>
         <span class="menu-title">Laboratorium</span>
       </a>
     </li>
     <li class="nav-item">
-      <a class="nav-link" href="{{ route('peminjaman.index') }}">
+      <a class="nav-link" href="{{ route('admin.peminjaman.index') }}">
         <i class="menu-icon typcn typcn-document-text"></i>
         <span class="menu-title">Peminjaman</span>
       </a>

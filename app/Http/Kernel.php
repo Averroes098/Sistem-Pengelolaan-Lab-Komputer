@@ -15,7 +15,7 @@ class Kernel extends HttpKernel
         // Middleware global Laravel
         \Illuminate\Foundation\Http\Middleware\CheckForMaintenanceMode::class,
         \Illuminate\Foundation\Http\Middleware\ValidatePostSize::class,
-        \App\Http\Middleware\TrimStrings::class,
+        // \App\Http\Middleware\TrimStrings::class,  // Commented: Class not found
         \Illuminate\Foundation\Http\Middleware\ConvertEmptyStringsToNull::class,
         \Illuminate\Http\Middleware\HandleCors::class,
 

@@ -31,7 +31,7 @@ class LaboratoriumController extends Controller
             'status' => $request->status,
         ]);
 
-        return redirect()->route('laboratorium.index')
+        return redirect()->route('admin.laboratorium.index')
             ->with(['success' => 'Data berhasil ditambah!']);
     }
 
@@ -55,7 +55,7 @@ class LaboratoriumController extends Controller
             'status' => $request->status,
         ]);
 
-        return redirect()->route('laboratorium.index')
+        return redirect()->route('admin.laboratorium.index')
             ->with(['success' => 'Data berhasil diubah!']);
     }
 
@@ -64,7 +64,7 @@ class LaboratoriumController extends Controller
         $laboratorium = Laboratorium::findOrFail($id);
         $laboratorium->delete();
 
-        return redirect()->route('laboratorium.index')
+        return redirect()->route('admin.laboratorium.index')
             ->with(['success' => 'Data berhasil dihapus!']);
     }
 }

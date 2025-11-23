@@ -1,0 +1,15 @@
+parameters:
+    level: 5
+    paths:
+        - app
+        - routes
+        - tests
+    ignoreErrors:
+        # Laravel helper functions are not recognized by static analysis
+        - '#Undefined method.*auth\(\)#'
+        - '#Undefined method.*check\(\)#'
+        - '#Undefined method.*user\(\)#'
+        - '#Undefined method.*id\(\)#'
+    excludePaths:
+        - tests/Feature
+        - tests/Unit

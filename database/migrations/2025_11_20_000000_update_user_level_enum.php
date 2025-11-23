@@ -21,6 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        DB::statement("ALTER TABLE users MODIFY level ENUM('user','admin') DEFAULT 'user'");
+        // Drop kolom dan buat ulang untuk avoid data truncation error
+        DB::statement("ALTER TABLE users DROP COLUMN level");
+        DB::statement("ALTER TABLE users ADD COLUMN level ENUM('user','admin') DEFAULT 'user' AFTER email");
     }
 };

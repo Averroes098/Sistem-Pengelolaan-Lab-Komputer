@@ -3,6 +3,7 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
+use Illuminate\Support\Facades\Auth;
 
 class UpdateUserProfileRequest extends FormRequest
 {
@@ -11,7 +12,9 @@ class UpdateUserProfileRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return $this->user()->id === (int)$this->route('user');
+        $user = $this->user();
+        $userId = $this->route('user');
+        return $user && $user->id === (int)$userId;
     }
 
     /**
@@ -21,9 +24,13 @@ class UpdateUserProfileRequest extends FormRequest
      */
     public function rules(): array
     {
+        /** @phpstan-ignore-next-line */
+        $authUser = Auth::user();
+        $userId = $authUser?->id ?? $this->route('user');
+        
         return [
             // Profile completion wajib
-            'nim' => ['required', 'string', 'max:50', 'unique:users,nim,' . auth()->id()],
+            'nim' => ['required', 'string', 'max:50', 'unique:users,nim,' . $userId],
             'no_telp' => ['required', 'string', 'max:16'],
             'jenis_kelamin' => ['required', 'in:L,P'],
             

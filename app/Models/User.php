@@ -6,6 +6,14 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
+/**
+ * @property bool $is_profile_complete
+ * @property string $nim
+ * @property string $nama
+ * @property string $email
+ * @property string $password
+ * @property string $level
+ */
 class User extends Authenticatable
 {
     use HasFactory, Notifiable;

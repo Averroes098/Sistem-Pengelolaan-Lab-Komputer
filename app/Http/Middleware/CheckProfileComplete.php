@@ -2,8 +2,10 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\User;
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Symfony\Component\HttpFoundation\Response;
 
 class CheckProfileComplete
@@ -16,15 +18,19 @@ class CheckProfileComplete
     public function handle(Request $request, Closure $next): Response
     {
         // Jika user sudah login tapi profil belum lengkap
-        if (auth()->check() && !auth()->user()->is_profile_complete) {
+        /** @var User|null $user */
+        /** @phpstan-ignore-next-line */
+        $user = Auth::user();
+        /** @phpstan-ignore-next-line */
+        if (Auth::check() && $user && !$user->is_profile_complete) {
             // Jika sudah di halaman profile completion, lanjutkan
-            if ($request->routeIs('profile.edit', 'profile.update')) {
+            if ($request->routeIs('profile.complete', 'profile.update')) {
                 return $next($request);
             }
 
             // Redirect ke profile completion page dengan notifikasi
             return redirect()
-                ->route('profile.edit')
+                ->route('profile.complete')
                 ->with('warning', 'Silakan lengkapi data profil Anda terlebih dahulu untuk mengakses fitur lainnya.');
         }
 
