@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Auth;
 class StafController extends Controller
 {
     // ==================== KERUSAKAN ====================
-    public function kerusakan() 
+    public function kerusakan()
     {
         $alat = Alat::all();
         return view('staf.kerusakan', compact('alat'));
@@ -29,20 +29,22 @@ class StafController extends Controller
         try {
             // Ambil alat
             $alat = Alat::findOrFail($request->alat_id);
-            
+
             // Update kondisi alat menjadi "Rusak"
             $alat->update([
                 'kondisi' => 'Rusak',
             ]);
 
-            // Buat laporan kerusakan di documents table
+            // Buat laporan kerusakan di documents table (simpan alat_id untuk referensi)
             Document::create([
                 'lab_id' => $alat->lab_id,
+                'alat_id' => $alat->id,
                 'tipe_dokumen' => 'Laporan Kerusakan',
                 'judul' => "Laporan Kerusakan - {$alat->nama_alat}",
                 'deskripsi' => $request->keterangan,
                 'file_path' => null,
                 'uploaded_by' => Auth::id(),
+                'status' => 'pending',
             ]);
 
             return redirect()->back()->with('success', 'Kerusakan berhasil dicatat dan alat diupdate menjadi Rusak');
@@ -52,12 +54,14 @@ class StafController extends Controller
     }
 
     // ==================== SOP ====================
-    public function sop() {
+    public function sop()
+    {
         $laboratorium = Laboratorium::all();
         return view('staf.sop', compact('laboratorium'));
     }
 
-    public function uploadSOP(Request $request) {
+    public function uploadSOP(Request $request)
+    {
         $request->validate([
             'lab_id' => 'required|exists:laboratorium,id',
             'judul' => 'required|string|max:255',
@@ -86,7 +90,8 @@ class StafController extends Controller
     }
 
     // ==================== [USER] Show SOP ====================
-    public function showSop() {
+    public function showSop()
+    {
         $sops = Document::where('tipe_dokumen', 'SOP')->get();
         return view('user.sop.index', compact('sops'));
     }

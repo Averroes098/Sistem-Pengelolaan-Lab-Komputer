@@ -12,9 +12,11 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('laboratorium', function (Blueprint $table) {
-            // tambahkan kolom status
-            $table->boolean('status')->default(1)->after('kapasitas'); 
-            // 1 = tersedia, 0 = dipinjam
+            // HAPUS atau KOMENTARI baris lama ini:
+            // $table->boolean('status')->default(1)->after('kapasitas'); 
+
+            // GANTI dengan baris ini (Tipe ENUM):
+            $table->enum('status', ['tersedia', 'tidak_tersedia'])->default('tersedia')->after('kapasitas');
         });
     }
 

@@ -25,4 +25,12 @@ class Document extends Model
     {
         return $this->belongsTo(User::class, 'uploaded_by');
     }
+
+    /**
+     * Relasi ke tabel alat (opsional, untuk laporan kerusakan)
+     */
+    public function alat(): BelongsTo
+    {
+        return $this->belongsTo(Alat::class, 'alat_id');
+    }
 }

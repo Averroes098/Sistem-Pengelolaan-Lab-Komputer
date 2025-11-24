@@ -16,11 +16,11 @@ return new class extends Migration
             $table->string('nim')->unique();
             $table->string('nama');
             $table->string('no_telp', 16);
-            $table->enum('jenis_kelamin', ['L','P']);
+            $table->enum('jenis_kelamin', ['L', 'P']);
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
-            $table->enum('level', ['user','admin'])->default('user');
+            $table->enum('level', ['user', 'admin', 'staf', 'kadep'])->default('user');
             $table->rememberToken();
             $table->timestamps();
         });

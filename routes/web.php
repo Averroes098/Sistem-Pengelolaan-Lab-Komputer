@@ -17,7 +17,7 @@ Route::middleware('guest')->group(function () {
     Route::get('/', function () {
         return view('welcome');
     })->name('welcome');
-    
+
     // Login
     Route::get('/login', [AuthController::class, 'login'])->name('login'); // PENTING: Jangan ubah nama ini
     Route::post('/login', [AuthController::class, 'authenticate'])->name('login.authenticate');
@@ -52,23 +52,26 @@ Route::prefix('kadep')->middleware(['auth', 'kadep'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('kadep.dashboard');
     Route::get('/peminjaman', [PeminjamanController::class, 'index'])->name('kadep.peminjaman.index');
     Route::resource('alat', AlatController::class)->names('kadep.alat');
+    // Laporan Kerusakan untuk Kadep
+    Route::get('/kerusakan', [\App\Http\Controllers\KadepController::class, 'kerusakanIndex'])->name('kadep.kerusakan.index');
+    Route::post('/kerusakan/confirm/{id}', [\App\Http\Controllers\KadepController::class, 'confirmReport'])->name('kadep.kerusakan.confirm');
 });
 
 // ================== USER ROUTES (MAHASISWA/DOSEN) ==================
 Route::prefix('user')->middleware(['auth', 'user'])->group(function () {
     Route::get('/', [UserController::class, 'index'])->name('user.index');
-    
+
     // Form Peminjaman
     Route::get('/peminjaman/create/{lab_id}', [PeminjamanController::class, 'createForUser'])
         ->name('peminjaman.create');
-        
+
     // Proses Simpan
     Route::post('/peminjaman/store-user', [PeminjamanController::class, 'storeUser'])
         ->name('peminjaman.storeUser');
 
     // SOP
     Route::get('/sop', [StafController::class, 'showSop'])->name('user.sop');
-    
+
     // Profil
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');

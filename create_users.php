@@ -8,7 +8,7 @@ $kernel->bootstrap();
 use App\Models\User;
 
 // Delete existing users
-User::whereIn('email', ['admin@lab.com', 'staf@lab.com', 'user@lab.com'])->delete();
+User::whereIn('email', ['admin@lab.com', 'staf@lab.com', 'user@lab.com', 'kadep@lab.com'])->delete();
 
 // Create Admin
 $admin = User::create([
@@ -42,6 +42,22 @@ $staf = User::create([
 ]);
 echo "✓ Staf created: staf@lab.com / staf123\n";
 
+// Create Kadep
+$kadep = User::create([
+    'nama' => 'Kepala Departemen',
+    'email' => 'kadep@lab.com',
+    'password' => bcrypt('kadep123'),
+    'level' => 'kadep',
+    'nim' => 'KDP001',
+    'no_telp' => '081234567892',
+    'jenis_kelamin' => 'L',
+    'program_studi' => 'Teknik Informatika',
+    'angkatan' => 2018,
+    'alamat' => 'Lab Building',
+    'is_profile_complete' => 1
+]);
+echo "✓ Kadep created: kadep@lab.com / kadep123\n";
+
 // Create User
 $user = User::create([
     'nama' => 'User Mahasiswa',
@@ -59,4 +75,3 @@ $user = User::create([
 echo "✓ User created: user@lab.com / user123\n";
 
 echo "\n✓ All users created successfully!\n";
-?>

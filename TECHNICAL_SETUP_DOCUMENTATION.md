@@ -59,7 +59,7 @@ CREATE TABLE users (
     email VARCHAR(255) UNIQUE NOT NULL,
     email_verified_at TIMESTAMP NULL,
     password VARCHAR(255) NOT NULL,
-    level ENUM('user','admin','staf') DEFAULT 'user',
+    level ENUM('user','admin','staf','kadep') DEFAULT 'user',
     program_studi VARCHAR(255) NULL,
     angkatan VARCHAR(255) NULL,
     alamat VARCHAR(255) NULL,
@@ -76,6 +76,11 @@ Enum values:
 - 'admin'  → Administrator dashboard at /admin/dashboard
 - 'staf'   → Staff dashboard at /staf/dashboard  
 - 'user'   → User dashboard at /user
+ - 'kadep'  → Kepala Departemen dashboard at /kadep/dashboard
+
+Kadep features:
+- Route `GET /kadep/kerusakan` → list Laporan Kerusakan (lihat laporan dari staf)
+- Route `POST /kadep/kerusakan/confirm/{id}` → konfirmasi laporan dan perbarui `alat.kondisi` menjadi `Baik`
 ```
 
 ---
