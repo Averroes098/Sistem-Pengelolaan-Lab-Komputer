@@ -3,45 +3,57 @@
 namespace App\Http\Controllers;
 
 use App\Models\Alat;
+use App\Models\Laboratorium;
 use Illuminate\Http\Request;
 
 class AlatController extends Controller
 {
     public function index() {
-        $alat = Alat::all();
-        return view('alat.index', compact('alat'));
+        $alat = Alat::with('laboratorium')->get();
+        return view('kadep.alat.index', compact('alat'));
     }
 
     public function create() {
-        return view('alat.create');
+        $laboratorium = Laboratorium::all();
+        return view('kadep.alat.create', compact('laboratorium'));
     }
 
     public function store(Request $request) {
         $request->validate([
             'kode_alat' => 'required|unique:alat',
             'nama_alat' => 'required',
+            'lab_id' => 'required|exists:laboratorium,id',
             'kategori' => 'required',
-            'jumlah' => 'required|integer',
+            'kondisi' => 'required',
         ]);
 
         Alat::create($request->all());
-        return redirect()->route('alat.index')->with('success', 'Data alat berhasil ditambahkan');
+        return redirect()->route('kadep.alat.index')->with('success', 'Data alat berhasil ditambahkan');
     }
 
     public function edit($id) {
         $alat = Alat::findOrFail($id);
-        return view('alat.edit', compact('alat'));
+        $laboratorium = Laboratorium::all();
+        return view('kadep.alat.edit', compact('alat', 'laboratorium'));
     }
 
     public function update(Request $request, $id) {
+        $request->validate([
+            'kode_alat' => 'required|unique:alat,kode_alat,'.$id,
+            'nama_alat' => 'required',
+            'lab_id' => 'required|exists:laboratorium,id',
+            'kategori' => 'required',
+            'kondisi' => 'required',
+        ]);
+        
         $alat = Alat::findOrFail($id);
         $alat->update($request->all());
-        return redirect()->route('alat.index')->with('success', 'Data alat berhasil diperbarui');
+        return redirect()->route('kadep.alat.index')->with('success', 'Data alat berhasil diperbarui');
     }
 
     public function destroy($id) {
         $alat = Alat::findOrFail($id);
         $alat->delete();
-        return redirect()->route('alat.index')->with('success', 'Data alat berhasil dihapus');
+        return redirect()->route('kadep.alat.index')->with('success', 'Data alat berhasil dihapus');
     }
 }

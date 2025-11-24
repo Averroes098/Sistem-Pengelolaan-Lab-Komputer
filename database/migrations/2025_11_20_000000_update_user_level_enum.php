@@ -12,8 +12,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        // Ubah enum level untuk menambah 'staf'
-        DB::statement("ALTER TABLE users MODIFY level ENUM('admin', 'staf', 'user') DEFAULT 'user'");
+        // Memastikan enum 'level' memiliki semua nilai yang benar.
+        DB::statement("ALTER TABLE users MODIFY level ENUM('user', 'admin', 'staf', 'kadep') DEFAULT 'user'");
     }
 
     /**
@@ -21,8 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        // Drop kolom dan buat ulang untuk avoid data truncation error
-        DB::statement("ALTER TABLE users DROP COLUMN level");
-        DB::statement("ALTER TABLE users ADD COLUMN level ENUM('user','admin') DEFAULT 'user' AFTER email");
+        // Revert ke status sebelumnya, yang seharusnya juga memiliki semua nilai.
+        // Untuk keamanan, kita definisikan ulang ke state yang stabil.
+        DB::statement("ALTER TABLE users MODIFY level ENUM('user', 'admin', 'staf', 'kadep') DEFAULT 'user'");
     }
 };

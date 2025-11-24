@@ -1,42 +1,64 @@
 <nav class="sidebar sidebar-offcanvas" id="sidebar">
   <ul class="nav">
+    <li class="nav-item nav-category">Main Menu</li>
 
-    <li class="nav-item nav-category">Menu Staf</li>
-
+    {{-- MENU ADMIN (Tetap) --}}
+    @if(auth()->check() && auth()->user()->level == 'admin')
+    {{-- ... (kode admin tetap sama) ... --}}
     <li class="nav-item">
-      <a class="nav-link" href="{{ route('staf.dashboard') }}">
-        <i class="mdi mdi-view-dashboard menu-icon"></i>
+      <a class="nav-link" href="{{ route('admin.dashboard') }}">
+        <i class="menu-icon typcn typcn-document-text"></i>
         <span class="menu-title">Dashboard</span>
       </a>
     </li>
-
     <li class="nav-item">
-      <a class="nav-link" href="{{ route('staf.peminjaman') }}">
-        <i class="mdi mdi-check-all menu-icon"></i>
-        <span class="menu-title">Validasi Peminjaman</span>
+      <a class="nav-link" href="{{ route('admin.laboratorium.index') }}">
+        <i class="menu-icon typcn typcn-document-text"></i>
+        <span class="menu-title">Laboratorium</span>
       </a>
     </li>
-
     <li class="nav-item">
-      <a class="nav-link" href="{{ route('staf.pengembalian') }}">
-        <i class="mdi mdi-autorenew menu-icon"></i>
-        <span class="menu-title">Pengembalian Alat</span>
+      <a class="nav-link" href="{{ route('admin.peminjaman.index') }}">
+        <i class="menu-icon typcn typcn-document-text"></i>
+        <span class="menu-title">Peminjaman</span>
       </a>
     </li>
+    @endif
 
+    {{-- MENU STAF (Tetap) --}}
+    @if(auth()->check() && auth()->user()->level == 'staf')
+    {{-- ... (kode staf tetap sama) ... --}}
     <li class="nav-item">
-      <a class="nav-link" href="{{ route('staf.kerusakan') }}">
-        <i class="mdi mdi-alert menu-icon"></i>
-        <span class="menu-title">Catat Kerusakan</span>
+      <a class="nav-link" href="{{ route('staf.dashboard') }}">
+        <i class="menu-icon typcn typcn-home"></i>
+        <span class="menu-title">Dashboard</span>
       </a>
     </li>
+    {{-- ... menu staf lainnya ... --}}
+    @endif
 
+    {{-- MENU KADEP --}}
+    @if(auth()->check() && auth()->user()->level == 'kadep')
     <li class="nav-item">
-      <a class="nav-link" href="{{ route('staf.sop') }}">
-        <i class="mdi mdi-file-upload menu-icon"></i>
-        <span class="menu-title">Upload SOP</span>
+      <a class="nav-link" href="{{ route('kadep.dashboard') }}">
+        <i class="menu-icon typcn typcn-document-text"></i>
+        <span class="menu-title">Dashboard</span>
       </a>
     </li>
+    <li class="nav-item">
+      <a class="nav-link" href="{{ route('kadep.peminjaman.index') }}">
+        <i class="menu-icon typcn typcn-document-text"></i>
+        <span class="menu-title">Peminjaman</span>
+      </a>
+    </li>
+    <li class="nav-item">
+      {{-- UBAH LABEL DI SINI --}}
+      <a class="nav-link" href="{{ route('kadep.alat.index') }}">
+        <i class="menu-icon typcn typcn-document-text"></i>
+        <span class="menu-title">Kerusakan Alat</span>
+      </a>
+    </li>
+    @endif
 
   </ul>
 </nav>

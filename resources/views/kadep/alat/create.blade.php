@@ -38,8 +38,12 @@
                             <input type="text" class="form-control" id="kategori" name="kategori" required>
                         </div>
                         <div class="form-group">
-                            <label for="jumlah">Jumlah</label>
-                            <input type="number" class="form-control" id="jumlah" name="jumlah" required>
+                            <label for="lab_id">Laboratorium</label>
+                            <select class="form-control" id="lab_id" name="lab_id" required>
+                                @foreach($laboratorium as $lab)
+                                    <option value="{{ $lab->id }}">{{ $lab->nama_lab }}</option>
+                                @endforeach
+                            </select>
                         </div>
                         <div class="form-group">
                             <label for="kondisi">Kondisi</label>

@@ -66,6 +66,10 @@
                     <label for="password" class="col-sm-3 col-form-label">Password</label>
                     <input type="password" class="form-control" id="password" name="password" placeholder="Masukkan password">
                   </div>
+                  <div class="form-group row">
+                    <label for="password_confirmation" class="col-sm-3 col-form-label">Confirm Password</label>
+                    <input type="password" class="form-control" id="password_confirmation" name="password_confirmation" placeholder="Konfirmasi password">
+                  </div>
                   
                   <button type="submit" class="btn btn-success mr-2">Daftar</button>
                   <button class="btn btn-light">Cancel</button>

@@ -3,7 +3,6 @@
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
-use Illuminate\Support\Facades\DB;
 
 return new class extends Migration
 {
@@ -12,9 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        // Migrasi ini tidak lagi diperlukan karena peran 'kadep'
-        // sudah dipastikan ada di migrasi sebelumnya. Dibiarkan kosong
-        // untuk menjaga histori migrasi.
+        Schema::table('documents', function (Blueprint $table) {
+            $table->string('file_path')->nullable()->change();
+        });
     }
 
     /**
@@ -22,6 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        // Tidak ada aksi yang perlu dibatalkan.
+        Schema::table('documents', function (Blueprint $table) {
+            $table->string('file_path')->nullable(false)->change();
+        });
     }
 };

@@ -77,19 +77,22 @@ class AuthController extends Controller
         ]);
 
         // Simpan user baru
-        User::create([
+        $user = User::create([
             'nim' => $request->nim,
             'nama' => $request->nama,
             'jenis_kelamin' => $request->jenis_kelamin,
             'no_telp' => $request->no_telp,
             'email' => $request->email,
-            'password' => Hash::make($request->password),
+            'password' => $request->password,
             'level' => 'user', // default user baru
         ]);
 
+        // Login user setelah registrasi
+        Auth::login($user);
+
         return redirect()
-            ->route('login')
-            ->with('success', 'Registrasi berhasil! Silakan login.');
+            ->route('user.index') // Arahkan ke dashboard user
+            ->with('success', 'Registrasi berhasil dan Anda telah login.');
     }
 
     /**

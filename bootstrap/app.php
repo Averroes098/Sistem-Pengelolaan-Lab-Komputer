@@ -11,7 +11,7 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
-        // 🔹 Middleware global bawaan Laravel (jangan dihapus)
+        
         $middleware->web(append: [
             \App\Http\Middleware\EncryptCookies::class,
             \Illuminate\Cookie\Middleware\AddQueuedCookiesToResponse::class,
@@ -21,12 +21,13 @@ return Application::configure(basePath: dirname(__DIR__))
             \Illuminate\Routing\Middleware\SubstituteBindings::class,
         ]);
 
-        // 🔹 Daftar middleware alias custom & bawaan
+        // TAMBAHKAN 'kadep' DI SINI
         $middleware->alias([
-            'auth' => \App\Http\Middleware\Authenticate::class,   // penting! middleware login
+            'auth' => \App\Http\Middleware\Authenticate::class,
             'admin' => \App\Http\Middleware\Admin::class,
             'staf' => \App\Http\Middleware\Staf::class,
             'user' => \App\Http\Middleware\User::class,
+            'kadep' => \App\Http\Middleware\Kadep::class, // <--- Tambahkan baris ini
         ]);
     })
     ->withExceptions(function (Exceptions $exceptions) {
