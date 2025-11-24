@@ -7,6 +7,7 @@ use App\Http\Controllers\PeminjamanController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\StafController;
+use App\Http\Controllers\AlatController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
@@ -46,6 +47,13 @@ Route::prefix('admin')->middleware(['auth', 'admin'])->group(function () {
     Route::resource('peminjaman', PeminjamanController::class)->except(['show'])->names('admin.peminjaman');
 });
 
+// ================== KADEP ROUTES ==================
+Route::prefix('kadep')->middleware(['auth', 'kadep'])->group(function () {
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('kadep.dashboard');
+    Route::get('/peminjaman', [PeminjamanController::class, 'index'])->name('kadep.peminjaman.index');
+    Route::resource('alat', AlatController::class)->names('kadep.alat');
+});
+
 // ================== USER ROUTES (MAHASISWA/DOSEN) ==================
 Route::prefix('user')->middleware(['auth', 'user'])->group(function () {
     Route::get('/', [UserController::class, 'index'])->name('user.index');
@@ -58,6 +66,9 @@ Route::prefix('user')->middleware(['auth', 'user'])->group(function () {
     Route::post('/peminjaman/store-user', [PeminjamanController::class, 'storeUser'])
         ->name('peminjaman.storeUser');
 
+    // SOP
+    Route::get('/sop', [StafController::class, 'showSop'])->name('user.sop');
+    
     // Profil
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');

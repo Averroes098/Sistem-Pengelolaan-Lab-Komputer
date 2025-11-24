@@ -84,4 +84,10 @@ class StafController extends Controller
             return redirect()->back()->with('error', 'Error uploading SOP: ' . $e->getMessage());
         }
     }
+
+    // ==================== [USER] Show SOP ====================
+    public function showSop() {
+        $sops = Document::where('tipe_dokumen', 'SOP')->get();
+        return view('user.sop.index', compact('sops'));
+    }
 }
