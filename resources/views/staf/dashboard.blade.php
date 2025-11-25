@@ -49,7 +49,7 @@
         </div>
 
         <div class="col-md-3">
-            <a href="{{ route('staf.sop') }}" class="btn btn-info btn-block">Upload SOP</a>
+            <a href="{{ route('staf.sop.index') }}" class="btn btn-info btn-block">Upload SOP</a>
         </div>
 
     </div>

@@ -63,9 +63,9 @@
       </a>
     </li>
     <li class="nav-item">
-      <a class="nav-link" href="{{ route('staf.sop') }}">
-        <i class="menu-icon typcn typcn-upload"></i>
-        <span class="menu-title">Upload SOP</span>
+      <a class="nav-link" href="{{ route('staf.sop.index') }}">
+        <i class="menu-icon typcn typcn-document-text"></i>
+        <span class="menu-title">Manajemen SOP</span>
       </a>
     </li>
     @endif

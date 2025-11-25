@@ -52,47 +52,4 @@ class StafController extends Controller
             return redirect()->back()->with('error', 'Error: ' . $e->getMessage());
         }
     }
-
-    // ==================== SOP ====================
-    public function sop()
-    {
-        $laboratorium = Laboratorium::all();
-        return view('staf.sop', compact('laboratorium'));
-    }
-
-    public function uploadSOP(Request $request)
-    {
-        $request->validate([
-            'lab_id' => 'required|exists:laboratorium,id',
-            'judul' => 'required|string|max:255',
-            'deskripsi' => 'nullable|string',
-            'file' => 'required|file|mimes:pdf,doc,docx,txt|max:5120', // max 5MB
-        ]);
-
-        try {
-            // Store file
-            $filePath = $request->file('file')->store('documents/sop', 'public');
-
-            // Create document record
-            Document::create([
-                'lab_id' => $request->lab_id,
-                'tipe_dokumen' => 'SOP',
-                'judul' => $request->judul,
-                'deskripsi' => $request->deskripsi,
-                'file_path' => $filePath,
-                'uploaded_by' => Auth::id(),
-            ]);
-
-            return redirect()->back()->with('success', 'SOP berhasil diupload!');
-        } catch (\Exception $e) {
-            return redirect()->back()->with('error', 'Error uploading SOP: ' . $e->getMessage());
-        }
-    }
-
-    // ==================== [USER] Show SOP ====================
-    public function showSop()
-    {
-        $sops = Document::where('tipe_dokumen', 'SOP')->get();
-        return view('user.sop.index', compact('sops'));
-    }
 }

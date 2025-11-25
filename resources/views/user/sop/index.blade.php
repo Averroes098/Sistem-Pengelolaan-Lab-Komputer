@@ -1,58 +1,56 @@
-@extends('layouts.main')
-@section('title', 'SOP Laboratorium')
+
+@extends('layouts.main', ['title' => 'SOP Laboratorium'])
 
 @section('content')
-<div class="content-wrapper">
-  <div class="row page-title-header">
-    <div class="col-12">
-      <div class="page-header">
-        <h3 class="page-title">SOP Laboratorium</h3>
-        <nav aria-label="breadcrumb">
-          <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="{{ route('dashboard.user') }}">Dashboard</a></li>
-            <li class="breadcrumb-item active" aria-current="page">SOP</li>
-          </ol>
-        </nav>
-      </div>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-header">
+                    <h3 class="card-title">Daftar Standard Operating Procedures (SOP)</h3>
+                </div>
+                <div class="card-body">
+                    @if(session('success'))
+                        <div class="alert alert-success">
+                            {{ session('success') }}
+                        </div>
+                    @endif
+
+                    <div class="table-responsive">
+                        <table class="table table-bordered table-hover">
+                            <thead>
+                                <tr>
+                                    <th>#</th>
+                                    <th>Judul SOP</th>
+                                    <th>Laboratorium</th>
+                                    <th>Deskripsi</th>
+                                    <th>Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @forelse ($sops as $sop)
+                                    <tr>
+                                        <td>{{ $loop->iteration }}</td>
+                                        <td>{{ $sop->judul }}</td>
+                                        <td>{{ $sop->laboratorium->nama ?? 'Umum' }}</td>
+                                        <td>{{ $sop->deskripsi ?? '-' }}</td>
+                                        <td>
+                                            <a href="{{ route('sop.download', $sop->id) }}" class="btn btn-sm btn-primary" title="Download">
+                                                <i class="fas fa-download"></i> Download
+                                            </a>
+                                        </td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="5" class="text-center">Belum ada SOP yang diunggah.</td>
+                                    </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
-  </div>
-
-  <div class="row">
-    @forelse ($sops as $sop)
-      <div class="col-md-6 mb-4">
-        <div class="card shadow-sm h-100">
-          <div class="card-body d-flex flex-column">
-            <h5 class="card-title">{{ $sop->judul }}</h5>
-
-            <div class="mb-2">
-              <span class="badge bg-primary">Laboratorium: {{ $sop->laboratorium->nama_lab ?? 'Semua Lab' }}</span>
-              <span class="badge bg-secondary">{{ $sop->created_at->format('d M Y') }}</span>
-              @if(!empty($sop->kategori))
-                <span class="badge bg-info">{{ $sop->kategori }}</span>
-              @endif
-            </div>
-
-            <div class="card-text mb-3" style="max-height: 120px; overflow-y: auto;">
-              {{ $sop->deskripsi }}
-            </div>
-
-            @if($sop->file_path)
-              <a href="{{ asset('storage/' . $sop->file_path) }}" target="_blank" class="btn btn-sm btn-primary mt-auto">
-                <i class="mdi mdi-file-document-outline"></i> Lihat / Download SOP
-              </a>
-            @else
-              <span class="text-muted mt-auto">File SOP belum tersedia</span>
-            @endif
-          </div>
-        </div>
-      </div>
-    @empty
-      <div class="col-12">
-        <div class="alert alert-info">
-          Belum ada SOP yang diunggah.
-        </div>
-      </div>
-    @endforelse
-  </div>
 </div>
 @endsection

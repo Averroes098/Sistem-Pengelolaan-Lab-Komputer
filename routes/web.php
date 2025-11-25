@@ -9,6 +9,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\StafController;
 use App\Http\Controllers\AlatController;
 use App\Http\Controllers\KadepController;
+use App\Http\Controllers\SopController;
 use Illuminate\Support\Facades\Route;
 
 // ================== AUTH (LOGIN & REGISTER) ==================
@@ -116,10 +117,16 @@ Route::prefix('user')->middleware(['auth', 'user'])->group(function () {
         Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.user')->middleware('auth');
 
     // SOP & Profil
-    Route::get('/sop', [StafController::class, 'showSop'])->name('user.sop');
+    Route::get('/sop', [SopController::class, 'indexForUser'])->name('user.sop');
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
+
+// ================== SOP (UMUM) ==================
+Route::get('/sop/download/{document}', [SopController::class, 'download'])
+    ->name('sop.download')
+    ->middleware('auth');
+
 
 // ================== PROFILE (UMUM) ==================
 Route::middleware('auth')->group(function () {
@@ -140,12 +147,13 @@ Route::prefix('staf')->middleware(['auth', 'staf'])->group(function () {
     Route::get('/pengembalian', [PeminjamanController::class, 'pengembalian'])->name('staf.pengembalian');
     Route::post('/pengembalian/{id}', [PeminjamanController::class, 'konfirmasiPengembalian'])->name('staf.pengembalian.konfirmasi');
 
-    // Kerusakan & SOP
+    // Kerusakan
     Route::get('/kerusakan', [StafController::class, 'kerusakan'])->name('staf.kerusakan');
     Route::post('/kerusakan/input', [StafController::class, 'inputKerusakan'])->name('staf.kerusakan.input');
-    Route::get('/sop', [StafController::class, 'sop'])->name('staf.sop');
-    Route::post('/sop/upload', [StafController::class, 'uploadSOP'])->name('staf.sop.upload');
 
     // Laporan Peminjaman
     Route::get('/laporan/peminjaman', [PeminjamanController::class, 'laporanPeminjaman'])->name('staf.laporan.peminjaman');
+
+    // SOP Management
+    Route::resource('sop', SopController::class)->names('staf.sop');
 });

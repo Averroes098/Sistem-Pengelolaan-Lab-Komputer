@@ -1,11 +1,11 @@
 @extends('layouts.staf')
 
-@section('title', 'Upload SOP')
+@section('title', 'Upload SOP Baru')
 
 @section('content')
 <div class="content-wrapper">
 
-    <h3 class="mb-4">Upload SOP Laboratorium</h3>
+    <h3 class="mb-4">Upload SOP Laboratorium Baru</h3>
 
     @if ($errors->any())
         <div class="alert alert-danger alert-dismissible fade show" role="alert">
@@ -21,27 +21,18 @@
         </div>
     @endif
 
-    @if (session('success'))
-        <div class="alert alert-success alert-dismissible fade show" role="alert">
-            {{ session('success') }}
-            <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-            </button>
-        </div>
-    @endif
-
     <div class="card">
         <div class="card-body">
 
-            <form action="{{ route('staf.sop.upload') }}" method="POST" enctype="multipart/form-data">
+            <form action="{{ route('staf.sop.store') }}" method="POST" enctype="multipart/form-data">
                 @csrf
 
                 <div class="form-group">
                     <label for="lab_id">Pilih Laboratorium <span class="text-danger">*</span></label>
                     <select name="lab_id" id="lab_id" class="form-control @error('lab_id') is-invalid @enderror" required>
                         <option value="">-- Pilih Lab --</option>
-                        @foreach(\App\Models\Laboratorium::all() as $lab)
-                            <option value="{{ $lab->id }}">{{ $lab->nama_lab }}</option>
+                        @foreach($laboratorium as $lab)
+                            <option value="{{ $lab->id }}" {{ old('lab_id') == $lab->id ? 'selected' : '' }}>{{ $lab->nama_lab }}</option>
                         @endforeach
                     </select>
                     @error('lab_id')<small class="text-danger">{{ $message }}</small>@enderror
@@ -70,10 +61,10 @@
                 </div>
 
                 <div class="d-flex gap-2 mt-4">
-                    <button type="submit" class="btn btn-info">
-                        <i class="mdi mdi-cloud-upload-outline mr-2"></i>Upload SOP
+                    <button type="submit" class="btn btn-primary">
+                        <i class="mdi mdi-cloud-upload-outline mr-2"></i>Simpan SOP
                     </button>
-                    <a href="{{ route('staf.dashboard') }}" class="btn btn-secondary">Kembali</a>
+                    <a href="{{ route('staf.sop.index') }}" class="btn btn-secondary">Batal</a>
                 </div>
             </form>
 

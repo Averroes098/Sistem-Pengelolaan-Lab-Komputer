@@ -95,16 +95,23 @@
 @endsection
 
 @push('scripts')
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-    $(function() {
+    // To prevent re-initialization bugs, store chart instances globally.
+    window.myCharts = window.myCharts || {};
+
+    function renderCharts() {
         // Data from controller
         const labUsageData = @json($labUsage);
         const alatUsageData = @json($alatUsage);
         const monthlyTrendData = @json($trenPeminjaman);
 
-        // 1. Lab Usage Chart (Bar)
+        // --- 1. Lab Usage Chart (Bar) ---
         const labUsageCtx = document.getElementById('labUsageChart').getContext('2d');
-        new Chart(labUsageCtx, {
+        if (window.myCharts.labUsageChart) {
+            window.myCharts.labUsageChart.destroy();
+        }
+        window.myCharts.labUsageChart = new Chart(labUsageCtx, {
             type: 'bar',
             data: {
                 labels: Object.keys(labUsageData),
@@ -119,7 +126,10 @@
             options: {
                 scales: {
                     y: {
-                        beginAtZero: true
+                        beginAtZero: true,
+                        ticks: {
+                            stepSize: 1
+                        }
                     }
                 },
                 responsive: true,
@@ -127,9 +137,12 @@
             }
         });
 
-        // 2. Alat Usage Chart (Bar)
+        // --- 2. Alat Usage Chart (Bar) ---
         const alatUsageCtx = document.getElementById('alatUsageChart').getContext('2d');
-        new Chart(alatUsageCtx, {
+        if (window.myCharts.alatUsageChart) {
+            window.myCharts.alatUsageChart.destroy();
+        }
+        window.myCharts.alatUsageChart = new Chart(alatUsageCtx, {
             type: 'bar',
             data: {
                 labels: Object.keys(alatUsageData),
@@ -144,7 +157,10 @@
             options: {
                  scales: {
                     y: {
-                        beginAtZero: true
+                        beginAtZero: true,
+                        ticks: {
+                            stepSize: 1
+                        }
                     }
                 },
                 responsive: true,
@@ -152,15 +168,18 @@
             }
         });
 
-        // 3. Monthly Trend Chart (Line)
+        // --- 3. Monthly Trend Chart (Line) ---
         const monthlyTrendCtx = document.getElementById('monthlyTrendChart').getContext('2d');
         const trendLabels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
         const trendData = Array(12).fill(0);
         for (const [bulan, total] of Object.entries(monthlyTrendData)) {
             trendData[bulan - 1] = total;
         }
-
-        new Chart(monthlyTrendCtx, {
+        
+        if (window.myCharts.monthlyTrendChart) {
+            window.myCharts.monthlyTrendChart.destroy();
+        }
+        window.myCharts.monthlyTrendChart = new Chart(monthlyTrendCtx, {
             type: 'line',
             data: {
                 labels: trendLabels,
@@ -175,13 +194,20 @@
             options: {
                  scales: {
                     y: {
-                        beginAtZero: true
+                        beginAtZero: true,
+                        ticks: {
+                            stepSize: 1
+                        }
                     }
                 },
                 responsive: true,
                 maintainAspectRatio: false
             }
         });
+    }
+
+    $(function() {
+        renderCharts();
     });
 </script>
 @endpush

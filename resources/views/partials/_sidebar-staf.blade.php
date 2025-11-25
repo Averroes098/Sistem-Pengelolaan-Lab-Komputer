@@ -28,6 +28,22 @@
         </a>
       </li>
 
+      {{-- Input Kerusakan --}}
+      <li class="nav-item">
+        <a class="nav-link" href="{{ route('staf.kerusakan') }}">
+          <i class="menu-icon typcn typcn-warning"></i>
+          <span class="menu-title">Kerusakan</span>
+        </a>
+      </li>
+
+      {{-- Manajemen SOP --}}
+      <li class="nav-item">
+        <a class="nav-link" href="{{ route('staf.sop.index') }}">
+          <i class="menu-icon typcn typcn-document-text"></i>
+          <span class="menu-title">Manajemen SOP</span>
+        </a>
+      </li>
+
       {{-- Laporan Peminjaman (opsional) --}}
       <li class="nav-item">
         <a class="nav-link" href="{{ route('staf.laporan.peminjaman') }}">
