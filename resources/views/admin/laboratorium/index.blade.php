@@ -52,41 +52,43 @@
             </tr>
           </thead>
 
-          <tbody>
-            @foreach ($data as $d)
-              <tr>
-                <td>{{ $d->id }}</td>
-                <td>{{ $d->nama_lab }}</td>
+<tbody>
+    @foreach ($data as $d)
+        <tr>
+            <td>{{ $d->id }}</td>
+            <td>{{ $d->nama_lab }}</td>
 
-                <!-- STATUS ENUM -->
-                <td>
-                  @if ($d->status == 1)
-                    <span class="btn-sm btn-success btn-rounded">Tersedia</span>
-                  @elseif ($d->status == 0)
-                    <span class="btn-sm btn-warning btn-rounded">Dipinjam</span>
-                  @else
-                    <span class="btn-sm btn-danger btn-rounded">Perbaikan</span>
-                  @endif
-                </td>
+            <!-- STATUS ENUM -->
+<td>
+    @if ($d->status == 'tersedia')
+        <span class="badge badge-success">Tersedia</span>
+    @elseif ($d->status == 'terpakai')
+        <span class="badge badge-warning">Terpakai</span>
+    @elseif ($d->status == 'maintenance')
+        <span class="badge badge-danger">Maintenance</span>
+    @endif
+</td>
 
-                <td>
-                  <a href="{{ route('admin.laboratorium.edit', $d->id) }}" class="btn-sm btn-info btn-rounded">Edit</a>
+            <td>
+                <a href="{{ route('admin.laboratorium.edit', $d->id) }}"
+                   class="btn-sm btn-info btn-rounded">
+                   Edit
+                </a>
 
-                  <form action="{{ route('admin.laboratorium.destroy', $d->id) }}"
-                        method="POST"
-                        style="display: inline-block;">
-                      @csrf
-                      @method('DELETE')
-                      <button class="btn-sm btn-danger btn-rounded"
-                              onclick="return confirm('Hapus data laboratorium ini?')">
-                          Delete
-                      </button>
-                  </form>
-                </td>
-
-              </tr>
-            @endforeach
-          </tbody>
+                <form action="{{ route('admin.laboratorium.destroy', $d->id) }}"
+                      method="POST"
+                      style="display: inline-block;">
+                    @csrf
+                    @method('DELETE')
+                    <button class="btn-sm btn-danger btn-rounded"
+                            onclick="return confirm('Hapus data laboratorium ini?')">
+                        Delete
+                    </button>
+                </form>
+            </td>
+        </tr>
+    @endforeach
+</tbody>
 
         </table>
       </div>

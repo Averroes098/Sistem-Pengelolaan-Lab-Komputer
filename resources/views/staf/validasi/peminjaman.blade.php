@@ -21,7 +21,7 @@
                 </thead>
 
                 <tbody>
-                    @forelse($menunggu as $p)
+                    @forelse($peminjaman as $p)
                     <tr>
                         <td>{{ $p->user?->nama ?? $p->user?->name ?? 'User Tidak Dikenal' }}</td>
                         <td>{{ $p->alat?->nama_alat ?? ($p->laboratorium?->nama_lab ?? 'Lab Tidak Dikenal') }}</td>

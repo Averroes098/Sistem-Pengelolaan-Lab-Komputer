@@ -34,19 +34,22 @@ class AuthController extends Controller
             // Regenerasi session ID untuk keamanan
             $request->session()->regenerate();
 
-            $user = Auth::user();
+$user = Auth::user();
 
-            // Arahkan sesuai level user
-            if ($user->level === 'admin') {
-                return redirect()->route('admin.dashboard')
-                    ->with('success', 'Login berhasil sebagai Admin.');
-            } elseif ($user->level === 'staf') {
-                return redirect()->route('staf.dashboard')
-                    ->with('success', 'Login berhasil sebagai Staf.');
-            } else {
-                return redirect()->route('user.index')
-                    ->with('success', 'Login berhasil sebagai Mahasiswa.');
-            }
+// Arahkan sesuai level user
+if ($user->level === 'admin') {
+    return redirect()->route('admin.dashboard')
+        ->with('success', 'Login berhasil sebagai Admin.');
+} elseif ($user->level === 'staf') {
+    return redirect()->route('staf.dashboard')
+        ->with('success', 'Login berhasil sebagai Staf.');
+} elseif ($user->level === 'kadep') {
+    return redirect()->route('kadep.dashboard')
+        ->with('success', 'Login berhasil sebagai Kepala Departemen.');
+} else {
+    return redirect()->route('dashboard.user')
+        ->with('success', 'Login berhasil sebagai Mahasiswa.');
+}
         }
 
         // Jika login gagal
@@ -70,8 +73,8 @@ class AuthController extends Controller
         $request->validate([
             'nim' => 'required|string|max:20',
             'nama' => 'required|string|max:255',
-            'jenis_kelamin' => 'required|in:L,P',
-            'no_telp' => 'required|string|min:10|max:21',
+            'jenis_kelamin' => 'nullable|in:L,P',
+            'no_telp' => 'nullable|string|min:10|max:21',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string|min:1|confirmed',
         ]);
@@ -91,7 +94,7 @@ class AuthController extends Controller
         Auth::login($user);
 
         return redirect()
-            ->route('user.index') // Arahkan ke dashboard user
+            ->route('dashboard.user') // Arahkan ke dashboard user
             ->with('success', 'Registrasi berhasil dan Anda telah login.');
     }
 

@@ -12,7 +12,7 @@
                 </h3>
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="{{ route('user.index') }}">Dashboard</a></li>
+                        <li class="breadcrumb-item"><a href="{{ route('dashboard.user') }}">Dashboard</a></li>
                         <li class="breadcrumb-item active" aria-current="page">Peminjaman Lab</li>
                     </ol>
                 </nav>
@@ -155,7 +155,7 @@
 
                         <!-- Buttons -->
                         <div class="d-flex justify-content-between mt-4">
-                            <a href="{{ route('user.index') }}" class="btn btn-secondary">
+                            <a href="{{ route('dashboard.user') }}" class="btn btn-secondary">
                                 <i class="mdi mdi-arrow-left mr-2"></i>Kembali
                             </a>
                             <button type="submit" class="btn btn-success">

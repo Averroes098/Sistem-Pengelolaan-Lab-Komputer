@@ -49,8 +49,8 @@ class ProfileController extends Controller
         if (!$user->is_profile_complete) {
             $validated = $request->validate([
                 'nim' => 'required|string|unique:users,nim,' . $user->id,
-                'no_telp' => 'required|string|max:20',
-                'jenis_kelamin' => 'required|in:L,P',
+                'no_telp' => 'nullable|string|max:20',
+                'jenis_kelamin' => 'nullable|in:L,P',
                 'program_studi' => 'nullable|string',
                 'angkatan' => 'nullable|string',
                 'alamat' => 'nullable|string',
@@ -68,7 +68,7 @@ class ProfileController extends Controller
         // Validation untuk profile update biasa
         $validated = $request->validate([
             'nim' => 'sometimes|string|unique:users,nim,' . $user->id,
-            'no_telp' => 'sometimes|string|max:20',
+            'no_telp' => 'nullable|string|max:20',
             'program_studi' => 'nullable|string',
             'angkatan' => 'nullable|string',
             'alamat' => 'nullable|string',

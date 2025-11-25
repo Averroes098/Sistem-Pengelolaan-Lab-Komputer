@@ -43,15 +43,15 @@
                     <td>{{ $dl->id }}</td>
                     <td>{{ $dl->nama_lab }}</td>
 
-                    <td>
-                      @if ($dl->status == 1)
-                        <span class="btn btn-sm btn-success btn-rounded">Tersedia</span>
-                      @elseif ($dl->status == 0)
-                        <span class="btn btn-sm btn-warning btn-rounded">Dipinjam</span>
-                      @else
-                        <span class="btn btn-sm btn-danger btn-rounded">Perbaikan</span>
-                      @endif
-                    </td>
+<td>
+    @if ($dl->status == 'tersedia')
+        <span class="badge badge-success">Tersedia</span>
+    @elseif ($dl->status == 'terpakai')
+        <span class="badge badge-warning">Terpakai</span>
+    @elseif ($dl->status == 'maintenance')
+        <span class="badge badge-danger">Maintenance</span>
+    @endif
+</td>
 
                   </tr>
                 @endforeach
@@ -93,7 +93,7 @@
           <p class="text-muted text-center py-3">Belum ada data peminjaman</p>
           @endforelse
 
-          <a class="d-block mt-3" href="{{ route('admin.peminjaman.index') }}">Show all</a>
+          <a class="d-block mt-3" href="{{ route('admin.peminjaman.lab.index') }}">Show all</a>
         </div>
       </div>
     </div>

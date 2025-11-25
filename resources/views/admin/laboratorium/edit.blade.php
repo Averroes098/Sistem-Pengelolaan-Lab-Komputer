@@ -48,13 +48,27 @@
         </div>
 
         <!-- Status -->
-        <div class="form-group">
-          <label for="status">Status Laboratorium</label>
-          <select id="status" name="status" class="form-control" required>
-            <option disabled>Pilih status...</option>
-            <option value="1" {{ old('status', $laboratorium->status) == 1 ? 'selected' : '' }}>Tersedia</option>
-            <option value="0" {{ old('status', $laboratorium->status) == 0 ? 'selected' : '' }}>Tidak Tersedia</option>
-          </select>
+ <div class="form-group">
+  <label for="status">Status Laboratorium</label>
+  <select id="status" name="status" class="form-control" required>
+      <option disabled>Pilih status...</option>
+
+      <option value="tersedia" 
+          {{ old('status', $laboratorium->status) == 'tersedia' ? 'selected' : '' }}>
+          Tersedia
+      </option>
+
+      <option value="terpakai" 
+          {{ old('status', $laboratorium->status) == 'terpakai' ? 'selected' : '' }}>
+          Terpakai
+      </option>
+
+      <option value="maintenance" 
+          {{ old('status', $laboratorium->status) == 'maintenance' ? 'selected' : '' }}>
+          Maintenance
+      </option>
+  </select>
+</div>
         </div>
 
         <button type="submit" class="btn btn-success mr-2">Simpan</button>

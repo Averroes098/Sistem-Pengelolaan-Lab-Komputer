@@ -7,6 +7,7 @@ use App\Models\Peminjaman;
 use App\Models\Alat;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth; // Tambahkan ini
+use App\Models\User;
 
 class PeminjamanController extends Controller
 {
@@ -95,7 +96,7 @@ class PeminjamanController extends Controller
         ]);
 
         // 3. Redirect ke Dashboard User dengan Pesan
-        return redirect()->route('dashboard')->with('success', 'Pengajuan berhasil dikirim! Menunggu persetujuan.');
+        return redirect()->route('dashboard.user')->with('success', 'Pengajuan berhasil dikirim! Menunggu persetujuan.');
     }
 
     // ==============================
@@ -151,8 +152,17 @@ class PeminjamanController extends Controller
             ->where('status_peminjaman', 'pending')
             ->get();
 
-        return view('staf.peminjaman', compact('menunggu'));
+        return view('staf.validasi.peminjaman', ['peminjaman' => $menunggu]);
     }
+
+    public function laporan() {
+    // Ambil semua data peminjaman tanpa filter status
+    $peminjaman = Peminjaman::with(['user', 'alat', 'laboratorium'])->get();
+    
+    // Return ke view khusus laporan
+    return view('staf.laporan.laporan_peminjaman', compact('peminjaman'));
+}
+
 
     // ==============================
     // APPROVE PEMINJAMAN
@@ -165,6 +175,92 @@ class PeminjamanController extends Controller
 
         return back()->with('success', 'Peminjaman berhasil disetujui');
     }
+
+    // ==============================
+// PEMINJAMAN LAB (Admin)
+// ==============================
+public function labIndex()
+{
+    $peminjaman = Peminjaman::whereNotNull('lab_id')
+        ->with(['user', 'laboratorium'])
+        ->latest()
+        ->get();
+
+    return view('admin.peminjaman.lab.index', compact('peminjaman'));
+}
+
+public function labCreate()
+{
+    $laboratorium = Laboratorium::all();
+
+    return view('admin.peminjaman.lab.create', compact('laboratorium'));
+}
+
+public function labStore(Request $request)
+{
+    $request->validate([
+        'lab_id'     => 'required|exists:laboratorium,id',
+        'tgl_pinjam' => 'required|date',
+        'kembali'    => 'required|date|after_or_equal:tgl_pinjam',
+    ]);
+
+    Peminjaman::create([
+        'lab_id'              => $request->lab_id,
+        'alat_id'             => null,
+        'user_id'             => Auth::id(),
+        'tgl_pinjam'          => $request->tgl_pinjam,
+        'tgl_kembali'         => $request->kembali,
+        'status_peminjaman'   => 'pending',
+        'status_pengembalian' => 'belum dikembalikan',
+    ]);
+
+    return redirect()->route('admin.peminjaman.lab.index')
+        ->with('success', 'Peminjaman Lab berhasil ditambahkan.');
+}
+
+// ==============================
+// PEMINJAMAN ALAT (Admin)
+// ==============================
+public function alatIndex()
+{
+    $peminjaman = Peminjaman::whereNotNull('alat_id')
+        ->with(['user', 'alat'])
+        ->latest()
+        ->get();
+
+    return view('admin.peminjaman.alat.index', compact('peminjaman'));
+}
+
+public function alatCreate()
+{
+    $users = User::where('level', 'user')->get(); // Ambil semua user
+    $alat = Alat::all();  // Ambil semua alat
+
+    return view('admin.peminjaman.alat.create', compact('users', 'alat'));
+}
+
+public function alatStore(Request $request)
+{
+    $request->validate([
+        'user_id'    => 'required|exists:users,id', // pastikan user dipilih
+        'alat_id'    => 'required|exists:alat,id',
+        'tgl_pinjam' => 'required|date',
+        'kembali'    => 'required|date|after_or_equal:tgl_pinjam',
+    ]);
+
+    Peminjaman::create([
+        'alat_id'             => $request->alat_id,
+        'lab_id'              => null,
+        'user_id'             => $request->user_id,
+        'tgl_pinjam'          => $request->tgl_pinjam,
+        'tgl_kembali'         => $request->kembali,
+        'status_peminjaman'   => 'pending',
+        'status_pengembalian' => 'belum dikembalikan',
+    ]);
+
+    return redirect()->route('admin.peminjaman.alat.index')
+        ->with('success', 'Peminjaman Alat berhasil ditambahkan.');
+}
 
     // ==============================
     // REJECT PEMINJAMAN
@@ -202,4 +298,19 @@ class PeminjamanController extends Controller
 
         return back()->with('success', 'Pengembalian berhasil dikonfirmasi');
     }
+    public function laporanPeminjaman()
+{
+    // Ambil semua data peminjaman
+    $peminjaman = Peminjaman::all(); 
+    // Kirim data ke view staf/laporan/peminjaman.blade.php
+    return view('staf.laporan.peminjaman', compact('peminjaman'));
+}
+
+// Untuk Kadep
+public function kadepIndex()
+{
+    $peminjaman = Peminjaman::with(['user', 'alat', 'laboratorium'])->latest()->get();
+
+    return view('kadep.peminjaman.index', compact('peminjaman'));
+}
 }

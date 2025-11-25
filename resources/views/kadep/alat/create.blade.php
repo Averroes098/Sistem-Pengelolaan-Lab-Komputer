@@ -52,6 +52,11 @@
                                 <option value="Rusak">Rusak</option>
                             </select>
                         </div>
+
+                        <div class="form-group">
+    <label>Jumlah</label>
+    <input type="number" name="jumlah" class="form-control" value="{{ old('jumlah') ?? 0 }}" required>
+</div>
                         <button type="submit" class="btn btn-primary">Simpan</button>
                         <a href="{{ route('kadep.alat.index') }}" class="btn btn-secondary">Batal</a>
                     </form>

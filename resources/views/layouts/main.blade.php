@@ -65,5 +65,6 @@
     <script src="{{ asset('js/demo_1/dashboard.js') }}"></script>
     <!-- End custom js for this page-->
     <script src="{{ asset('js/shared/jquery.cookie.js') }}" type="text/javascript"></script>
+    @stack('scripts')
   </body>
 </html>

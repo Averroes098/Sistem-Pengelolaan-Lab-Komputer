@@ -1,50 +1,187 @@
 @extends('layouts.main')
 
+@section('title', 'Dashboard Kepala Departemen')
+
 @section('content')
-<div class="content-wrapper">
-    <div class="row page-title-header">
-        <div class="col-12">
-            <div class="page-header">
-                <h4 class="page-title">Dashboard Kepala Departemen</h4>
+<div class="container-fluid">
+
+    <!-- Statistik Ringkas -->
+    <div class="row">
+        <div class="col-md-3 grid-margin stretch-card">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">Lab Tersedia</h4>
+                    <div class="text-center">
+                        <p class="font-weight-bold" style="font-size: 2rem;">{{ $labTersedia->count() }}</p>
+                        <small>Laboratorium</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 grid-margin stretch-card">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">Lab Sering Dipinjam</h4>
+                     @if($labSeringDipinjam && $labSeringDipinjam->laboratorium)
+                        <p class="text-center font-weight-bold" style="font-size: 1rem;">{{ $labSeringDipinjam->laboratorium->nama }}</p>
+                        <p class="text-center">({{ $labSeringDipinjam->total }} kali)</p>
+                    @else
+                        <p class="text-center">Tidak ada data</p>
+                    @endif
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 grid-margin stretch-card">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">Total Peminjaman</h4>
+                    <div class="text-center">
+                        <p class="font-weight-bold" style="font-size: 2rem;">{{ $totalPeminjaman }}</p>
+                        <small>Kali</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-3 grid-margin stretch-card">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">Total Alat Rusak</h4>
+                    <div class="text-center">
+                        <p class="font-weight-bold" style="font-size: 2rem;">{{ $alatRusak }}</p>
+                        <small>Unit</small>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Grafik -->
+    <div class="row">
+        <div class="col-md-6 grid-margin stretch-card">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">Grafik Penggunaan Lab</h4>
+                    <div style="position: relative; height: 300px; width: 100%;">
+                        <canvas id="labUsageChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6 grid-margin stretch-card">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">Grafik Penggunaan Alat</h4>
+                     <div style="position: relative; height: 300px; width: 100%;">
+                        <canvas id="alatUsageChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-12 grid-margin stretch-card">
+            <div class="card">
+                <div class="card-body">
+                    <h4 class="card-title">Tren Peminjaman Bulanan</h4>
+                    <div style="position: relative; height: 300px; width: 100%;">
+                        <canvas id="monthlyTrendChart"></canvas>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 
-    <div class="row">
-        <div class="col-md-6 grid-margin">
-            <div class="card">
-                <div class="card-body">
-                    <h4 class="card-title mb-0">Total Peminjaman</h4>
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div class="d-inline-block pt-3">
-                            <div class="d-md-flex">
-                                <h2 class="mb-0">{{ $totalPeminjaman ?? 0 }}</h2>
-                            </div>
-                        </div>
-                        <div class="d-inline-block">
-                            <i class="typcn typcn-clipboard display-4 text-info"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="col-md-6 grid-margin">
-            <div class="card">
-                <div class="card-body">
-                    <h4 class="card-title mb-0">Laporan Kerusakan Alat</h4>
-                    <div class="d-flex justify-content-between align-items-center">
-                        <div class="d-inline-block pt-3">
-                            <div class="d-md-flex">
-                                <h2 class="mb-0">{{ $alatRusak ?? 0 }}</h2>
-                            </div>
-                        </div>
-                        <div class="d-inline-block">
-                            <i class="typcn typcn-warning-outline display-4 text-danger"></i>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
 </div>
 @endsection
+
+@push('scripts')
+<script>
+    $(function() {
+        // Data from controller
+        const labUsageData = @json($labUsage);
+        const alatUsageData = @json($alatUsage);
+        const monthlyTrendData = @json($trenPeminjaman);
+
+        // 1. Lab Usage Chart (Bar)
+        const labUsageCtx = document.getElementById('labUsageChart').getContext('2d');
+        new Chart(labUsageCtx, {
+            type: 'bar',
+            data: {
+                labels: Object.keys(labUsageData),
+                datasets: [{
+                    label: 'Jumlah Peminjaman',
+                    data: Object.values(labUsageData),
+                    backgroundColor: 'rgba(54, 162, 235, 0.5)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                },
+                responsive: true,
+                maintainAspectRatio: false
+            }
+        });
+
+        // 2. Alat Usage Chart (Bar)
+        const alatUsageCtx = document.getElementById('alatUsageChart').getContext('2d');
+        new Chart(alatUsageCtx, {
+            type: 'bar',
+            data: {
+                labels: Object.keys(alatUsageData),
+                datasets: [{
+                    label: 'Jumlah Peminjaman',
+                    data: Object.values(alatUsageData),
+                    backgroundColor: 'rgba(255, 99, 132, 0.5)',
+                    borderColor: 'rgba(255, 99, 132, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                 scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                },
+                responsive: true,
+                maintainAspectRatio: false
+            }
+        });
+
+        // 3. Monthly Trend Chart (Line)
+        const monthlyTrendCtx = document.getElementById('monthlyTrendChart').getContext('2d');
+        const trendLabels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        const trendData = Array(12).fill(0);
+        for (const [bulan, total] of Object.entries(monthlyTrendData)) {
+            trendData[bulan - 1] = total;
+        }
+
+        new Chart(monthlyTrendCtx, {
+            type: 'line',
+            data: {
+                labels: trendLabels,
+                datasets: [{
+                    label: 'Total Peminjaman',
+                    data: trendData,
+                    fill: false,
+                    borderColor: 'rgb(75, 192, 192)',
+                    tension: 0.1
+                }]
+            },
+            options: {
+                 scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                },
+                responsive: true,
+                maintainAspectRatio: false
+            }
+        });
+    });
+</script>
+@endpush

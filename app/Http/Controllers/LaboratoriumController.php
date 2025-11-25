@@ -23,7 +23,7 @@ class LaboratoriumController extends Controller
     {
         $request->validate([
             'nama' => 'required|max:30',
-            'status' => 'required|boolean'
+            'status' => 'required|in:tersedia,terpakai,maintenance'
         ]);
 
         Laboratorium::create([
@@ -47,7 +47,7 @@ class LaboratoriumController extends Controller
     {
         $request->validate([
             'nama' => 'required|max:30',
-            'status' => 'required|boolean'
+            'status' => 'required|in:tersedia,terpakai,maintenance'
         ]);
 
         Laboratorium::where('id', $id)->update([
