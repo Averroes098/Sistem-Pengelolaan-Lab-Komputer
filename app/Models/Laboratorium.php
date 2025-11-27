@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Laboratorium extends Model
-{
+{   
     protected $table = 'laboratorium';
     protected $guarded = ['id'];
 

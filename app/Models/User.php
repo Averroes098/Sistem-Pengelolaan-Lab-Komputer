@@ -88,10 +88,10 @@ class User extends Authenticatable
     /**
      * Accessor: Mengecek apakah profil user sudah lengkap
      */
-    public function getIsProfileCompleteAttribute(): bool
+    public function getProfileCompletedAttribute(): bool
     {
-        return !empty($this->program_studi)
-            && !empty($this->angkatan)
-            && !empty($this->alamat);
+        return !empty($this->nim)
+            && !empty($this->no_telp)
+            && !empty($this->jenis_kelamin);
     }
 }

@@ -30,7 +30,7 @@
       <p class="card-description">Pastikan semua input diisi dengan benar</p>
 
       <!-- FORM -->
-      <form method="POST" action="{{ route('admin.laboratorium.update', $laboratorium->id) }}" class="forms-sample">
+      <form method="POST" action="{{ route('admin.laboratorium.update', $laboratorium->id) }}" class="forms-sample" enctype="multipart/form-data">
         @csrf
         @method('PUT')  {{-- Penting untuk mengubah POST menjadi PUT --}}
 
@@ -48,27 +48,35 @@
         </div>
 
         <!-- Status -->
- <div class="form-group">
-  <label for="status">Status Laboratorium</label>
-  <select id="status" name="status" class="form-control" required>
-      <option disabled>Pilih status...</option>
+        <div class="form-group">
+          <label for="status">Status Laboratorium</label>
+          <select id="status" name="status" class="form-control" required>
+              <option disabled>Pilih status...</option>
 
-      <option value="tersedia" 
-          {{ old('status', $laboratorium->status) == 'tersedia' ? 'selected' : '' }}>
-          Tersedia
-      </option>
+              <option value="tersedia" 
+                  {{ old('status', $laboratorium->status) == 'tersedia' ? 'selected' : '' }}>
+                  Tersedia
+              </option>
 
-      <option value="terpakai" 
-          {{ old('status', $laboratorium->status) == 'terpakai' ? 'selected' : '' }}>
-          Terpakai
-      </option>
+              <option value="terpakai" 
+                  {{ old('status', $laboratorium->status) == 'terpakai' ? 'selected' : '' }}>
+                  Terpakai
+              </option>
 
-      <option value="maintenance" 
-          {{ old('status', $laboratorium->status) == 'maintenance' ? 'selected' : '' }}>
-          Maintenance
-      </option>
-  </select>
-</div>
+              <option value="maintenance" 
+                  {{ old('status', $laboratorium->status) == 'maintenance' ? 'selected' : '' }}>
+                  Maintenance
+              </option>
+          </select>
+        </div>
+
+        <!-- Foto -->
+        <div class="form-group">
+          <label for="foto">Foto Laboratorium</label>
+          <input type="file" class="form-control-file" id="foto" name="foto">
+          @if($laboratorium->foto)
+              <img src="{{ asset($laboratorium->foto) }}" alt="{{ $laboratorium->nama_lab }}" class="img-thumbnail mt-2" width="150">
+          @endif
         </div>
 
         <button type="submit" class="btn btn-success mr-2">Simpan</button>

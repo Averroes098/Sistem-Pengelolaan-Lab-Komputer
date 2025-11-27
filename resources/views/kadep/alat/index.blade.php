@@ -44,6 +44,7 @@
           <thead>
             <tr>
               <th>Kode Alat</th>
+              <th>Gambar</th>
               <th>Nama Alat</th>
               <th>Kategori</th>
               <th>Jumlah</th>
@@ -55,6 +56,13 @@
             @foreach ($alat as $item)
             <tr>
               <td>{{ $item->kode_alat }}</td>
+              <td>
+                @if($item->gambar)
+                  <img src="{{ asset($item->gambar) }}" alt="{{ $item->nama_alat }}" class="img-thumbnail" width="100">
+                @else
+                  No Image
+                @endif
+              </td>
               <td>{{ $item->nama_alat }}</td>
               <td>{{ $item->kategori }}</td>
               <td>{{ $item->jumlah }}</td>

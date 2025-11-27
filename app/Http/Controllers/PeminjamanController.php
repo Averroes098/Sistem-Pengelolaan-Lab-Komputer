@@ -39,7 +39,7 @@ class PeminjamanController extends Controller
     {
         // Ambil data lab berdasarkan ID yang diklik di dashboard
         $lab = Laboratorium::findOrFail($lab_id);
-        
+
         // Arahkan ke view form khusus user
         return view('user.peminjaman.create', compact('lab'));
     }
@@ -79,6 +79,7 @@ class PeminjamanController extends Controller
         $request->validate([
             'laboratorium_id' => 'required|exists:laboratorium,id',
             'tanggal_pinjam'  => 'required|date',
+            'tanggal_kembali' => 'required|date|after_or_equal:tanggal_pinjam',
             'jam_mulai'       => 'required',
             'jam_selesai'     => 'required|after:jam_mulai',
             'keperluan'       => 'required|string|max:255',
@@ -90,7 +91,7 @@ class PeminjamanController extends Controller
             'lab_id'              => $request->laboratorium_id, // Mapping nama form ke db
             'alat_id'             => null, // User meminjam ruangan, bukan alat spesifik
             'tgl_pinjam'          => $request->tanggal_pinjam,
-            'tgl_kembali'         => $request->tanggal_pinjam, // Asumsi pinjam harian (pulang hari)
+            'tgl_kembali'         => $request->tanggal_kembali,
             'status_peminjaman'   => 'pending',
             'status_pengembalian' => 'belum dikembalikan',
         ]);
@@ -143,174 +144,144 @@ class PeminjamanController extends Controller
             ->with('success', 'Data berhasil dihapus!');
     }
 
-    // ==============================
-    // VALIDASI (untuk staf)
-    // ==============================
-    public function validasi()
+    // Untuk Kadep
+    public function kadepIndex()
     {
-        $menunggu = Peminjaman::with(['user', 'alat', 'laboratorium'])
-            ->where('status_peminjaman', 'pending')
-            ->get();
+        $peminjaman = Peminjaman::with(['user', 'alat', 'laboratorium'])->latest()->get();
 
-        return view('staf.validasi.peminjaman', ['peminjaman' => $menunggu]);
-    }
-
-    public function laporan() {
-    // Ambil semua data peminjaman tanpa filter status
-    $peminjaman = Peminjaman::with(['user', 'alat', 'laboratorium'])->get();
-    
-    // Return ke view khusus laporan
-    return view('staf.laporan.laporan_peminjaman', compact('peminjaman'));
-}
-
-
-    // ==============================
-    // APPROVE PEMINJAMAN
-    // ==============================
-    public function approve($id)
-    {
-        $peminjaman = Peminjaman::findOrFail($id);
-        $peminjaman->status_peminjaman = 'disetujui';
-        $peminjaman->save();
-
-        return back()->with('success', 'Peminjaman berhasil disetujui');
+        return view('kadep.peminjaman.index', compact('peminjaman'));
     }
 
     // ==============================
-// PEMINJAMAN LAB (Admin)
-// ==============================
-public function labIndex()
-{
-    $peminjaman = Peminjaman::whereNotNull('lab_id')
-        ->with(['user', 'laboratorium'])
-        ->latest()
-        ->get();
-
-    return view('admin.peminjaman.lab.index', compact('peminjaman'));
-}
-
-public function labCreate()
-{
-    $laboratorium = Laboratorium::all();
-
-    return view('admin.peminjaman.lab.create', compact('laboratorium'));
-}
-
-public function labStore(Request $request)
-{
-    $request->validate([
-        'lab_id'     => 'required|exists:laboratorium,id',
-        'tgl_pinjam' => 'required|date',
-        'kembali'    => 'required|date|after_or_equal:tgl_pinjam',
-    ]);
-
-    Peminjaman::create([
-        'lab_id'              => $request->lab_id,
-        'alat_id'             => null,
-        'user_id'             => Auth::id(),
-        'tgl_pinjam'          => $request->tgl_pinjam,
-        'tgl_kembali'         => $request->kembali,
-        'status_peminjaman'   => 'pending',
-        'status_pengembalian' => 'belum dikembalikan',
-    ]);
-
-    return redirect()->route('admin.peminjaman.lab.index')
-        ->with('success', 'Peminjaman Lab berhasil ditambahkan.');
-}
-
-// ==============================
-// PEMINJAMAN ALAT (Admin)
-// ==============================
-public function alatIndex()
-{
-    $peminjaman = Peminjaman::whereNotNull('alat_id')
-        ->with(['user', 'alat'])
-        ->latest()
-        ->get();
-
-    return view('admin.peminjaman.alat.index', compact('peminjaman'));
-}
-
-public function alatCreate()
-{
-    $users = User::where('level', 'user')->get(); // Ambil semua user
-    $alat = Alat::all();  // Ambil semua alat
-
-    return view('admin.peminjaman.alat.create', compact('users', 'alat'));
-}
-
-public function alatStore(Request $request)
-{
-    $request->validate([
-        'user_id'    => 'required|exists:users,id', // pastikan user dipilih
-        'alat_id'    => 'required|exists:alat,id',
-        'tgl_pinjam' => 'required|date',
-        'kembali'    => 'required|date|after_or_equal:tgl_pinjam',
-    ]);
-
-    Peminjaman::create([
-        'alat_id'             => $request->alat_id,
-        'lab_id'              => null,
-        'user_id'             => $request->user_id,
-        'tgl_pinjam'          => $request->tgl_pinjam,
-        'tgl_kembali'         => $request->kembali,
-        'status_peminjaman'   => 'pending',
-        'status_pengembalian' => 'belum dikembalikan',
-    ]);
-
-    return redirect()->route('admin.peminjaman.alat.index')
-        ->with('success', 'Peminjaman Alat berhasil ditambahkan.');
-}
+    // LIST PEMINJAMAN LAB (Admin)
+    // ==============================
+    public function labIndex()
+    {
+        $peminjaman = Peminjaman::whereNotNull('lab_id')->with(['laboratorium', 'user'])->latest()->get();
+        return view('admin.peminjaman.lab.index', compact('peminjaman'));
+    }
 
     // ==============================
-    // REJECT PEMINJAMAN
+    // FORM TAMBAH LAB (Admin)
     // ==============================
-    public function reject($id)
+    public function labCreate()
+    {
+        $laboratorium = Laboratorium::all();
+        return view('admin.peminjaman.lab.create', compact('laboratorium'));
+    }
+
+    // ==============================
+    // STORE PEMINJAMAN LAB (Admin)
+    // ==============================
+    public function labStore(Request $request)
+    {
+        $request->validate([
+            'lab_id' => 'required|exists:laboratorium,id',
+            'tgl_pinjam' => 'required|date',
+            'tgl_kembali' => 'required|date|after_or_equal:tgl_pinjam',
+        ]);
+
+        Peminjaman::create([
+            'lab_id' => $request->lab_id,
+            'user_id' => Auth::id(),
+            'tgl_pinjam' => $request->tgl_pinjam,
+            'tgl_kembali' => $request->tgl_kembali,
+            'status_peminjaman' => 'pending',
+            'status_pengembalian' => 'belum dikembalikan',
+        ]);
+
+        return redirect()->route('admin.peminjaman.lab.index')->with('success', 'Data peminjaman laboratorium berhasil dibuat!');
+    }
+
+
+
+    // ==============================
+    // LIST PEMINJAMAN ALAT (Admin)
+    // ==============================
+    public function alatIndex()
+    {
+        $peminjaman = Peminjaman::whereNotNull('alat_id')->with(['alat', 'user'])->latest()->get();
+        return view('admin.peminjaman.alat.index', compact('peminjaman'));
+    }
+
+    // ==============================
+    // FORM TAMBAH ALAT PEMINJAMAN (Admin)
+    // ==============================
+    public function alatCreate()
+    {
+        $users = User::where('level', 'user')->get();
+        $alats = Alat::all();
+        return view('admin.peminjaman.alat.create', compact('users', 'alats'));
+    }
+
+    // ==============================
+    // STORE PEMINJAMAN ALAT (Admin)
+    // ==============================
+    public function alatStore(Request $request)
+    {
+        $request->validate([
+            'user_id' => 'required',
+            'alat_id' => 'required',
+            'tgl_pinjam' => 'required|date',
+            'tgl_kembali' => 'required|date|after_or_equal:tgl_pinjam',
+            'status_peminjaman' => 'required'
+        ]);
+
+        // Ambil data alat agar lab_id otomatis ikut
+        $alat = Alat::findOrFail($request->alat_id);
+
+        Peminjaman::create([
+            'alat_id' => $request->alat_id,
+            'user_id' => $request->user_id,
+            'lab_id' => $alat->lab_id, // otomatis berdasarkan alat
+            'tgl_pinjam' => $request->tgl_pinjam,
+            'tgl_kembali' => $request->tgl_kembali,
+            'status_peminjaman' => $request->status_peminjaman,
+            'status_pengembalian' => 'belum dikembalikan',
+        ]);
+
+        return redirect()->route('admin.peminjaman.alat.index')->with('success', 'Peminjaman berhasil ditambahkan.');
+    }
+
+
+
+    // ==============================
+    // EDIT LAB (Kadep)
+    // ==============================
+    public function editLab($id)
     {
         $peminjaman = Peminjaman::findOrFail($id);
-        $peminjaman->status_peminjaman = 'ditolak';
-        $peminjaman->save();
+        $laboratorium = Laboratorium::all();
 
-        return back()->with('success', 'Peminjaman berhasil ditolak');
+        return view('kadep.peminjaman.lab.edit', compact('peminjaman', 'laboratorium'));
     }
 
-    // ==============================
-    // PENGEMBALIAN (untuk staf)
-    // ==============================
-    public function pengembalian()
-    {
-        $peminjaman = Peminjaman::with(['user', 'alat', 'laboratorium'])
-            ->where('status_peminjaman', 'disetujui')
-            ->where('status_pengembalian', 'belum dikembalikan')
-            ->get();
-
-        return view('staf.pengembalian', compact('peminjaman'));
-    }
 
     // ==============================
-    // KONFIRMASI PENGEMBALIAN
+    // UPDATE LAB (Kadep)
     // ==============================
-    public function konfirmasiPengembalian($id)
+    public function updateLab(Request $request, $id)
     {
         $peminjaman = Peminjaman::findOrFail($id);
-        $peminjaman->status_pengembalian = 'sudah dikembalikan';
-        $peminjaman->save();
 
-        return back()->with('success', 'Pengembalian berhasil dikonfirmasi');
+        $request->validate([
+            'status_peminjaman' => 'required',
+        ]);
+
+        $peminjaman->update([
+            'status_peminjaman' => $request->status_peminjaman,
+        ]);
+
+        return redirect()->route('kadep.peminjaman.lab.index')->with('success', 'Status permintaan diperbarui!');
     }
-    public function laporanPeminjaman()
-{
-    // Ambil semua data peminjaman
-    $peminjaman = Peminjaman::all(); 
-    // Kirim data ke view staf/laporan/peminjaman.blade.php
-    return view('staf.laporan.peminjaman', compact('peminjaman'));
-}
 
-// Untuk Kadep
-public function kadepIndex()
-{
-    $peminjaman = Peminjaman::with(['user', 'alat', 'laboratorium'])->latest()->get();
 
-    return view('kadep.peminjaman.index', compact('peminjaman'));
-}
+    // ==============================
+    // DELETE LAB (Kadep)
+    // ==============================
+    public function destroyLab($id)
+    {
+        Peminjaman::findOrFail($id)->delete();
+        return back()->with('success', 'Data berhasil dihapus.');
+    }
 }

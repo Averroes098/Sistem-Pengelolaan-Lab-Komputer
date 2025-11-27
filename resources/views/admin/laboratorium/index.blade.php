@@ -47,6 +47,7 @@
             <tr>
               <th>Lab ID</th>
               <th>Nama</th>
+              <th>Foto</th>
               <th>Status</th>
               <th>Aksi</th>
             </tr>
@@ -57,6 +58,13 @@
         <tr>
             <td>{{ $d->id }}</td>
             <td>{{ $d->nama_lab }}</td>
+            <td>
+              @if($d->foto)
+                <img src="{{ asset($d->foto) }}" alt="{{ $d->nama_lab }}" class="img-thumbnail" width="100">
+              @else
+                No Image
+              @endif
+            </td>
 
             <!-- STATUS ENUM -->
 <td>

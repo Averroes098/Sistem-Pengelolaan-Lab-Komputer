@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Laboratorium;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class LaboratoriumController extends Controller
 {
@@ -23,13 +24,21 @@ class LaboratoriumController extends Controller
     {
         $request->validate([
             'nama' => 'required|max:30',
-            'status' => 'required|in:tersedia,terpakai,maintenance'
+            'status' => 'required|in:tersedia,terpakai,maintenance',
+            'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
-        Laboratorium::create([
-            'nama_lab' => $request->nama, // FIX
-            'status' => $request->status,
-        ]);
+        $input = $request->all();
+        $input['nama_lab'] = $request->nama;
+
+        if ($request->hasFile('foto')) {
+            $image = $request->file('foto');
+            $imageName = time().'.'.$image->extension();
+            $image->move(public_path('images/lab'), $imageName);
+            $input['foto'] = 'images/lab/'.$imageName;
+        }
+
+        Laboratorium::create($input);
 
         return redirect()->route('admin.laboratorium.index')
             ->with(['success' => 'Data berhasil ditambah!']);
@@ -47,13 +56,26 @@ class LaboratoriumController extends Controller
     {
         $request->validate([
             'nama' => 'required|max:30',
-            'status' => 'required|in:tersedia,terpakai,maintenance'
+            'status' => 'required|in:tersedia,terpakai,maintenance',
+            'foto' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
-        Laboratorium::where('id', $id)->update([
-            'nama_lab' => $request->nama, // FIX
-            'status' => $request->status,
-        ]);
+        $laboratorium = Laboratorium::findOrFail($id);
+        $input = $request->all();
+        $input['nama_lab'] = $request->nama;
+
+        if ($request->hasFile('foto')) {
+            if ($laboratorium->foto && file_exists(public_path($laboratorium->foto))) {
+                unlink(public_path($laboratorium->foto));
+            }
+            $image = $request->file('foto');
+            $imageName = time().'.'.$image->extension();
+            $image->move(public_path('images/lab'), $imageName);
+            $input['foto'] = 'images/lab/'.$imageName;
+        }
+
+
+        $laboratorium->update($input);
 
         return redirect()->route('admin.laboratorium.index')
             ->with(['success' => 'Data berhasil diubah!']);
@@ -62,6 +84,9 @@ class LaboratoriumController extends Controller
     public function destroy($id)
     {
         $laboratorium = Laboratorium::findOrFail($id);
+        if ($laboratorium->foto && file_exists(public_path($laboratorium->foto))) {
+            unlink(public_path($laboratorium->foto));
+        }
         $laboratorium->delete();
 
         return redirect()->route('admin.laboratorium.index')

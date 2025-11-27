@@ -23,7 +23,7 @@
         <div class="col-md-12 grid-margin">
             <div class="card">
                 <div class="card-body">
-                    <form action="{{ route('kadep.alat.update', $alat->id) }}" method="POST">
+                    <form action="{{ route('kadep.alat.update', $alat->id) }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         @method('PUT')
                         <div class="form-group">
@@ -52,6 +52,13 @@
                                 <option value="Baik" {{ $alat->kondisi == 'Baik' ? 'selected' : '' }}>Baik</option>
                                 <option value="Rusak" {{ $alat->kondisi == 'Rusak' ? 'selected' : '' }}>Rusak</option>
                             </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="gambar">Gambar</label>
+                            <input type="file" class="form-control-file" id="gambar" name="gambar">
+                            @if($alat->gambar)
+                                <img src="{{ asset($alat->gambar) }}" alt="{{ $alat->nama_alat }}" class="img-thumbnail mt-2" width="150">
+                            @endif
                         </div>
                         <div class="form-group">
     <label>Jumlah</label>

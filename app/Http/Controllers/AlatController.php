@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Alat;
 use App\Models\Laboratorium;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class AlatController extends Controller
 {
@@ -25,9 +26,19 @@ class AlatController extends Controller
             'lab_id' => 'required|exists:laboratorium,id',
             'kategori' => 'required',
             'kondisi' => 'required',
+            'gambar' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
-        Alat::create($request->all());
+        $input = $request->all();
+
+        if ($request->hasFile('gambar')) {
+            $image = $request->file('gambar');
+            $imageName = time().'.'.$image->extension();
+            $image->move(public_path('images/alat'), $imageName);
+            $input['gambar'] = 'images/alat/'.$imageName;
+        }
+
+        Alat::create($input);
         return redirect()->route('kadep.alat.index')->with('success', 'Data alat berhasil ditambahkan');
     }
 
@@ -44,15 +55,31 @@ class AlatController extends Controller
             'lab_id' => 'required|exists:laboratorium,id',
             'kategori' => 'required',
             'kondisi' => 'required',
+            'gambar' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
         
         $alat = Alat::findOrFail($id);
-        $alat->update($request->all());
+        $input = $request->all();
+
+        if ($request->hasFile('gambar')) {
+            if ($alat->gambar && file_exists(public_path($alat->gambar))) {
+                unlink(public_path($alat->gambar));
+            }
+            $image = $request->file('gambar');
+            $imageName = time().'.'.$image->extension();
+            $image->move(public_path('images/alat'), $imageName);
+            $input['gambar'] = 'images/alat/'.$imageName;
+        }
+
+        $alat->update($input);
         return redirect()->route('kadep.alat.index')->with('success', 'Data alat berhasil diperbarui');
     }
 
     public function destroy($id) {
         $alat = Alat::findOrFail($id);
+        if ($alat->gambar && file_exists(public_path($alat->gambar))) {
+            unlink(public_path($alat->gambar));
+        }
         $alat->delete();
         return redirect()->route('kadep.alat.index')->with('success', 'Data alat berhasil dihapus');
     }

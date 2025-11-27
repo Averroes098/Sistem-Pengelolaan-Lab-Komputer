@@ -20,6 +20,7 @@ class KadepController extends Controller
 
         // Lab paling sering dipinjam
         $labSeringDipinjam = Peminjaman::select('lab_id', DB::raw('count(*) as total'))
+            ->whereNotNull('lab_id')
             ->groupBy('lab_id')
             ->orderByDesc('total')
             ->with('laboratorium')
@@ -27,6 +28,7 @@ class KadepController extends Controller
 
         // Alat paling sering dipinjam
         $alatSeringDipinjam = Peminjaman::select('alat_id', DB::raw('count(*) as total'))
+            ->whereNotNull('alat_id')
             ->groupBy('alat_id')
             ->orderByDesc('total')
             ->with('alat')
@@ -49,21 +51,23 @@ class KadepController extends Controller
 
         // Data untuk grafik penggunaan lab
         $labUsage = Peminjaman::select('lab_id', DB::raw('count(*) as total'))
+            ->whereHas('laboratorium') // Ensure the relation exists
             ->groupBy('lab_id')
             ->with('laboratorium')
             ->get()
             ->mapWithKeys(function ($item) {
-                return [$item->laboratorium->nama ?? 'Tidak Diketahui' => $item->total];
+                return [$item->laboratorium->nama => $item->total];
             });
 
         // Data untuk grafik penggunaan alat
         $alatUsage = Peminjaman::select('alat_id', DB::raw('count(*) as total'))
             ->whereNotNull('alat_id')
+            ->whereHas('alat') // Ensure the relation exists
             ->groupBy('alat_id')
             ->with('alat')
             ->get()
             ->mapWithKeys(function ($item) {
-                return [$item->alat->nama_alat ?? 'Tidak Diketahui' => $item->total];
+                return [$item->alat->nama_alat => $item->total];
             });
 
         return view('kadep.dashboard', compact(

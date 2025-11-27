@@ -29,27 +29,28 @@ class AuthController extends Controller
         ]);
 
         $credentials = $request->only('email', 'password');
+        $remember = $request->has('remember');
 
-        if (Auth::attempt($credentials)) {
+        if (Auth::attempt($credentials, $remember)) {
             // Regenerasi session ID untuk keamanan
             $request->session()->regenerate();
 
-$user = Auth::user();
+            $user = Auth::user();
 
-// Arahkan sesuai level user
-if ($user->level === 'admin') {
-    return redirect()->route('admin.dashboard')
-        ->with('success', 'Login berhasil sebagai Admin.');
-} elseif ($user->level === 'staf') {
-    return redirect()->route('staf.dashboard')
-        ->with('success', 'Login berhasil sebagai Staf.');
-} elseif ($user->level === 'kadep') {
-    return redirect()->route('kadep.dashboard')
-        ->with('success', 'Login berhasil sebagai Kepala Departemen.');
-} else {
-    return redirect()->route('dashboard.user')
-        ->with('success', 'Login berhasil sebagai Mahasiswa.');
-}
+            // Arahkan sesuai level user
+            if ($user->level === 'admin') {
+                return redirect()->route('admin.dashboard')
+                    ->with('success', 'Login berhasil sebagai Admin.');
+            } elseif ($user->level === 'staf') {
+                return redirect()->route('staf.dashboard')
+                    ->with('success', 'Login berhasil sebagai Staf.');
+            } elseif ($user->level === 'kadep') {
+                return redirect()->route('kadep.dashboard')
+                    ->with('success', 'Login berhasil sebagai Kepala Departemen.');
+            } else {
+                return redirect()->route('dashboard.user')
+                    ->with('success', 'Login berhasil sebagai Mahasiswa.');
+            }
         }
 
         // Jika login gagal
@@ -71,7 +72,7 @@ if ($user->level === 'admin') {
     {
         // Validasi data
         $request->validate([
-            'nim' => 'required|string|max:20',
+            'nim' => 'required|string|max:20|unique:users',
             'nama' => 'required|string|max:255',
             'jenis_kelamin' => 'nullable|in:L,P',
             'no_telp' => 'nullable|string|min:10|max:21',
@@ -86,7 +87,7 @@ if ($user->level === 'admin') {
             'jenis_kelamin' => $request->jenis_kelamin,
             'no_telp' => $request->no_telp,
             'email' => $request->email,
-            'password' => $request->password,
+            'password' => Hash::make($request->password),
             'level' => 'user', // default user baru
         ]);
 

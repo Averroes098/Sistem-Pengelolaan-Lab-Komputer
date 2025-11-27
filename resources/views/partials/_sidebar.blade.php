@@ -78,18 +78,6 @@
         <span class="menu-title">Dashboard</span>
       </a>
     </li>
-    <li class="nav-item">
-      <a class="nav-link" href="{{ route('kadep.peminjaman.index') }}">
-        <i class="menu-icon typcn typcn-document-text"></i>
-        <span class="menu-title">Peminjaman</span>
-      </a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" href="{{ route('kadep.alat.index') }}">
-        <i class="menu-icon typcn typcn-document-text"></i>
-        <span class="menu-title">Alat</span>
-      </a>
-    </li>
     @endif
 
     {{-- MENU USER --}}

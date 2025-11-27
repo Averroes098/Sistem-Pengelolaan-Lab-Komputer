@@ -80,6 +80,13 @@
                       placeholder="Masukkan password" 
                       required>
                   </div>
+
+                  <div class="form-group">
+                    <div class="form-check">
+                      <label class="form-check-label">
+                        <input type="checkbox" class="form-check-input" name="remember" id="remember"> Remember me </label>
+                    </div>
+                  </div>
                   
                   <div class="mt-4 d-flex justify-content-between">
                     <button type="submit" class="btn btn-success">Login</button>

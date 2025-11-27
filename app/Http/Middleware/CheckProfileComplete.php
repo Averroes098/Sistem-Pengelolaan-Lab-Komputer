@@ -24,13 +24,13 @@ class CheckProfileComplete
         /** @phpstan-ignore-next-line */
         if (Auth::check() && $user && !$user->is_profile_complete) {
             // Jika sudah di halaman profile completion, lanjutkan
-            if ($request->routeIs('profile.complete', 'profile.update')) {
+            if ($request->routeIs(['profile.edit', 'profile.update'])) {
                 return $next($request);
             }
 
             // Redirect ke profile completion page dengan notifikasi
             return redirect()
-                ->route('profile.complete')
+                ->route('profile.edit')
                 ->with('warning', 'Silakan lengkapi data profil Anda terlebih dahulu untuk mengakses fitur lainnya.');
         }
 

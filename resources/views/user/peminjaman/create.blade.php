@@ -76,20 +76,41 @@
                         <hr class="my-4">
 
                         <!-- Tanggal Peminjaman -->
-                        <div class="form-group">
-                            <label for="tanggal_pinjam" class="font-weight-bold text-dark">
-                                <i class="mdi mdi-calendar mr-2"></i>Tanggal Peminjaman
-                                <span class="text-danger">*</span>
-                            </label>
-                            <input type="date" class="form-control @error('tanggal_pinjam') is-invalid @enderror" 
-                                   id="tanggal_pinjam" name="tanggal_pinjam" 
-                                   value="{{ old('tanggal_pinjam') }}"
-                                   min="{{ date('Y-m-d') }}" required>
-                            @error('tanggal_pinjam')
-                                <small class="text-danger d-block mt-2">
-                                    <i class="mdi mdi-alert-circle mr-1"></i>{{ $message }}
-                                </small>
-                            @enderror
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="tanggal_pinjam" class="font-weight-bold text-dark">
+                                        <i class="mdi mdi-calendar mr-2"></i>Tanggal Peminjaman
+                                        <span class="text-danger">*</span>
+                                    </label>
+                                    <input type="date" class="form-control @error('tanggal_pinjam') is-invalid @enderror" 
+                                           id="tanggal_pinjam" name="tanggal_pinjam" 
+                                           value="{{ old('tanggal_pinjam') }}"
+                                           min="{{ date('Y-m-d') }}" required>
+                                    @error('tanggal_pinjam')
+                                        <small class="text-danger d-block mt-2">
+                                            <i class="mdi mdi-alert-circle mr-1"></i>{{ $message }}
+                                        </small>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="tanggal_kembali" class="font-weight-bold text-dark">
+                                        <i class="mdi mdi-calendar-check mr-2"></i>Tanggal Kembali
+                                        <span class="text-danger">*</span>
+                                    </label>
+                                    <input type="date" class="form-control @error('tanggal_kembali') is-invalid @enderror" 
+                                           id="tanggal_kembali" name="tanggal_kembali" 
+                                           value="{{ old('tanggal_kembali') }}"
+                                           min="{{ date('Y-m-d') }}" required>
+                                    @error('tanggal_kembali')
+                                        <small class="text-danger d-block mt-2">
+                                            <i class="mdi mdi-alert-circle mr-1"></i>{{ $message }}
+                                        </small>
+                                    @enderror
+                                </div>
+                            </div>
                         </div>
 
                         <!-- Jam Mulai dan Selesai -->
@@ -256,5 +277,14 @@
         } else {
             this.setCustomValidity('');
         }
+    });
+
+    document.getElementById('jam_mulai').addEventListener('change', function() {
+        document.getElementById('jam_selesai').setCustomValidity('');
+    });
+
+    // Set minimum date for tanggal_kembali based on tanggal_pinjam
+    document.getElementById('tanggal_pinjam').addEventListener('change', function() {
+        document.getElementById('tanggal_kembali').min = this.value;
     });
 </script>

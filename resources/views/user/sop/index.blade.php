@@ -2,6 +2,13 @@
 @extends('layouts.main', ['title' => 'SOP Laboratorium'])
 
 @section('content')
+<style>
+    .description-cell {
+        max-width: 300px;
+        white-space: normal;
+        word-wrap: break-word;
+    }
+</style>
 <div class="container-fluid">
     <div class="row">
         <div class="col-12">
@@ -33,7 +40,7 @@
                                         <td>{{ $loop->iteration }}</td>
                                         <td>{{ $sop->judul }}</td>
                                         <td>{{ $sop->laboratorium->nama ?? 'Umum' }}</td>
-                                        <td>{{ $sop->deskripsi ?? '-' }}</td>
+                                        <td class="description-cell">{{ $sop->deskripsi ?? '-' }}</td>
                                         <td>
                                             <a href="{{ route('sop.download', $sop->id) }}" class="btn btn-sm btn-primary" title="Download">
                                                 <i class="fas fa-download"></i> Download

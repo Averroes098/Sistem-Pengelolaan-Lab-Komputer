@@ -27,9 +27,15 @@ class UserFactory extends Factory
             'nama' => fake()->name(),
             'nim' => fake()->unique()->numerify('##########'),
             'email' => fake()->unique()->safeEmail(),
-            'email_verified_at' => now(),
-            'password' => static::$password ??= 'password',
+            'email_verified_at' => null,
+            'password' => Hash::make('password'),
             'remember_token' => Str::random(10),
+            'no_telp' => fake()->phoneNumber(),
+            'jenis_kelamin' => fake()->randomElement(['L', 'P']),
+            'program_studi' => fake()->randomElement(['Informatika', 'Sistem Informasi', 'Teknik Komputer']),
+            'angkatan' => fake()->numberBetween(2018, 2023),
+            'alamat' => fake()->address(),
+            'level' => 'user',
         ];
     }
 

@@ -23,7 +23,7 @@
         <div class="col-md-12 grid-margin">
             <div class="card">
                 <div class="card-body">
-                    <form action="{{ route('kadep.alat.store') }}" method="POST">
+                    <form action="{{ route('kadep.alat.store') }}" method="POST" enctype="multipart/form-data">
                         @csrf
                         <div class="form-group">
                             <label for="kode_alat">Kode Alat</label>
@@ -51,6 +51,10 @@
                                 <option value="Baik">Baik</option>
                                 <option value="Rusak">Rusak</option>
                             </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="gambar">Gambar</label>
+                            <input type="file" class="form-control-file" id="gambar" name="gambar">
                         </div>
 
                         <div class="form-group">

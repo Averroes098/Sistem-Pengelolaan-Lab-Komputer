@@ -23,7 +23,7 @@
     <div class="card-body">
       <h4 class="card-title">Form Tambah Data</h4>
       <p class="card-description"> Pastikan anda memasuki inputan dengan benar </p>
-      <form class="forms-sample" method="POST" action="{{ route('admin.laboratorium.store') }}">
+      <form class="forms-sample" method="POST" action="{{ route('admin.laboratorium.store') }}" enctype="multipart/form-data">
         @CSRF
         <div class="form-group">
           <label for="nama">Nama Laboratorium</label>
@@ -32,10 +32,14 @@
         <div class="form-group">
           <label for="status">Status Laboratorium</label>
           <select class="form-control" id="status" name="status">
-            <option value="" disabled selected>Pilih status...</option>
-            <option value=1>Tersedia</option>
-            <option value=0>Tidak Tersedia</option>
+            <option value="tersedia" selected>Tersedia</option>
+            <option value="terpakai">Terpakai</option>
+            <option value="maintenance">Maintenance</option>
           </select>
+        </div>
+        <div class="form-group">
+          <label for="foto">Foto Laboratorium</label>
+          <input type="file" class="form-control-file" id="foto" name="foto">
         </div>
         <button type="submit" class="btn btn-success mr-2">Tambah</button>
         <button class="btn btn-light">Cancel</button>
